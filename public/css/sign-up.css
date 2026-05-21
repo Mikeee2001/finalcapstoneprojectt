@@ -1,0 +1,21 @@
+/* Signup page reuse login style */
+.signup-card{
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn{
+    from { opacity:0; transform:translateY(10px); }
+    to { opacity:1; transform:translateY(0); }
+}
+.signup-toggle-eye{
+    position:absolute;
+    left: 250px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:#6b7280;
+}
+
+.error-input {
+    border: 1px solid red !important;
+}

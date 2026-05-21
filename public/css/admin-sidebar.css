@@ -1,0 +1,99 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* LAYOUT */
+.layout {
+    display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 230px;
+    background: linear-gradient(180deg, #1e3a8a, #2563eb);
+    color: white;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    padding-top: 10px;
+}
+
+/* LOGO */
+.sidebar .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 15px 20px;
+
+    font-size: 22px;
+    font-weight: bold;
+
+    margin-bottom: 10px;
+}
+
+/* MENU */
+.sidebar .menu {
+    list-style: none;
+    padding: 0 10px;
+    margin: 0;
+}
+
+/* MENU ITEM */
+.sidebar .menu li {
+    margin-bottom: 6px;
+}
+
+/* MENU LINK */
+.menu-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 10px 14px;
+
+    color: white;
+    text-decoration: none;
+
+    border-radius: 12px;
+
+    transition: all 0.2s ease;
+}
+
+/* ICON */
+.menu-link i {
+    width: 18px;
+    text-align: center;
+    font-size: 15px;
+}
+
+/* TEXT */
+.menu-link span {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+
+/* ACTIVE */
+.menu-link.active {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+/* LOGOUT */
+.logout-item {
+    margin-top: auto;
+    padding: 10px;
+}
+
+.logout-item .menu-link {
+    background: rgba(255, 255, 255, 0.10);
+}
+
+/* MAIN */
+.main {
+    flex: 1;
+    padding: 20px;
+}

@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
+
+class CheckUser
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  Closure(Request): (Response)  $next
+     */
+   public function handle(Request $request, Closure $next): Response
+    {
+        // Check if the authenticated user has the 'admin' role
+        if (Auth::check() && Auth::user()->role === 'user') {
+            return $next($request);
+        }
+
+        // If the user doesn't have the 'admin' role, redirect them to the sign page with an error message
+        return redirect()->route('signin')->with('error', 'Access denied. You do not have permission to access this page.');
+    }
+}
