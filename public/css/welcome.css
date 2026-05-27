@@ -1,0 +1,25 @@
+  html {
+      scroll-behavior: smooth;
+  }
+
+  .fade-up {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 1s ease;
+  }
+
+  .fade-up.show {
+      opacity: 1;
+      transform: translateY(0);
+  }
+
+  .glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+  }
+
+  .hero-bg {
+      background:
+          radial-gradient(circle at top left, rgba(59, 130, 246, 0.25), transparent 35%),
+          radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.25), transparent 35%);
+  }

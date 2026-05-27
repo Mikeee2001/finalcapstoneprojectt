@@ -4,6 +4,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\SignupController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VetController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,7 +31,18 @@ Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function 
     Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
 });
 
+Route::prefix('vet')->middleware(['auth', 'checkRole:vet'])->group(function () {
+    Route::get('/dashboard', [VetController::class, 'dashboard'])->name('vet.dashboard');
 
+});
+
+Route::prefix('user')->middleware(['auth', 'checkRole:user'])->group(function () {
+    Route::get('/dashboard', [UserController::class, 'getuserDashboard'])->name('user.dashboard');
+    Route::get('/settings', [UserController::class, 'userSettings'])->name('user.settings');
+    Route::post('/settings/update', [UserController::class, 'updateUser'])->name('user.update');
+    Route::post('/settings/password', [UserController::class, 'updateUserPassword'])->name('user.update.password');
+
+});
 
 
 Route::get('/email/verify/custom/{id}/{hash}', function ($id, $hash, Request $request) {

@@ -18,11 +18,6 @@
                     </button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link" type="button" data-bs-toggle="tab" data-bs-target="#settings">
-                        Settings
-                    </button>
-                </li>
-                <li class="nav-item">
                     <button class="nav-link" type="button" data-bs-toggle="tab" data-bs-target="#password">
                         Password
                     </button>
@@ -46,24 +41,6 @@
                             <input type="email" name="email" class="form-control" value="{{ auth()->user()->email }}">
                         </div>
                         <button type="submit" class="btn btn-primary">Update Profile</button>
-                    </form>
-                </div>
-
-                <!-- SETTINGS -->
-                <div class="tab-pane fade" id="settings">
-                    <form id="settingsForm">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Role</label>
-                            <select name="role" class="form-control">
-                                <option value="" disabled>Select role</option>
-                                <option value="admin" {{ auth()->user()->role == 'admin' ? 'selected' : '' }}>Admin
-                                </option>
-                                <option value="user" {{ auth()->user()->role == 'user' ? 'selected' : '' }}>User</option>
-                                 <option value="vet" {{ auth()->user()->role == 'veterinarian' ? 'selected' : '' }}>Veterinarian</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-secondary">Save Settings</button>
                     </form>
                 </div>
 
@@ -104,7 +81,7 @@
                 formData.append('type', type);
 
                 try {
-                    const response = await fetch("{{ route('admin.update') }}", {
+                    const response = await fetch("{{ route('user.update') }}", {
                         method: "POST",
                         headers: {
                             "X-CSRF-TOKEN": csrfToken
@@ -130,11 +107,6 @@
                 submitForm('profileForm', 'profile');
             });
 
-            // SETTINGS
-            document.getElementById('settingsForm').addEventListener('submit', e => {
-                e.preventDefault();
-                submitForm('settingsForm', 'settings');
-            });
         });
     </script>
 
@@ -145,7 +117,7 @@
             const formData = new FormData(form);
 
             try {
-                const response = await fetch("{{ route('admin.update.password') }}", {
+                const response = await fetch("{{ route('user.update.password') }}", {
                     method: "POST",
                     headers: {
                         "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value

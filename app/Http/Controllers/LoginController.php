@@ -25,30 +25,46 @@ class LoginController extends Controller
 
         $credentials = $request->only('email', 'password');
 
+        // Attempt login
         if (!Auth::attempt($credentials)) {
             return back()->with('error', 'Invalid email or password.');
         }
 
         $user = Auth::user();
 
-        // Block if not verified
+        // Block unverified accounts
         if (!$user->email_verified_at) {
+
             Auth::logout();
-            return back()->with('error', 'Please verify your email before logging in.');
+
+            return back()->with(
+                'error',
+                'Please verify your email before logging in.'
+            );
         }
+
+        // Regenerate session (important for security)
+        $request->session()->regenerate();
 
         // Role-based redirect
         switch ($user->role) {
+
             case 'admin':
                 return redirect()->route('admin.dashboard');
 
+            case 'vet':
+                return redirect()->route('vet.dashboard');
+
             case 'user':
-                // ✅ Allow login once email is verified
                 return redirect()->route('user.dashboard');
 
             default:
+
                 Auth::logout();
-                return redirect()->route('signin')->with('error', 'Unauthorized access.');
+
+                return redirect()
+                    ->route('signin')
+                    ->with('error', 'Unauthorized access.');
         }
     }
 

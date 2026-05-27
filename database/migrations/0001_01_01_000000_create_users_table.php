@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('fullname');
             $table->string('email')->unique();
-            $table->enum('role', ['admin', 'veterinarian', 'user'])->default('user');
+            $table->enum('role', ['admin', 'vet', 'user'])->default('user');
             $table->timestamp('email_verified_at')->useCurrent();
             $table->string('email_verification_token')->nullable();
             $table->string('password');
@@ -36,6 +36,7 @@ return new class extends Migration {
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
     }
 
     /**

@@ -17,12 +17,12 @@ class CheckRole
     {
         // not logged in
         if (!auth()->check()) {
-            return redirect()->route('login');
+            return redirect()->route('signin');
         }
 
         // wrong role
         if (auth()->user()->role !== $role) {
-            return redirect()->route('login');
+            return redirect()->route('signin');
         }
 
         return $next($request);

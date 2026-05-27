@@ -7,21 +7,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckUser
+class CheckVet
 {
     /**
      * Handle an incoming request.
      *
      * @param  Closure(Request): (Response)  $next
      */
-   public function handle(Request $request, Closure $next): Response
+     public function handle(Request $request, Closure $next): Response
     {
-        // Check if the authenticated user has the 'user' role
-        if (Auth::check() && Auth::user()->role === 'user') {
+        // Check if the authenticated user has the 'vet' role
+        if (Auth::check() && Auth::user()->role === 'vet') {
             return $next($request);
         }
 
-        // If the user doesn't have the 'user' role, redirect them to the sign page with an error message
+        // If the user doesn't have the 'vet' role, redirect them to the sign page with an error message
         return redirect()->route('signin')->with('error', 'Access denied. You do not have permission to access this page.');
     }
 }

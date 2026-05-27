@@ -3,6 +3,7 @@
 use App\Http\Middleware\CheckAdmin;
 use App\Http\Middleware\CheckRole;
 use App\Http\Middleware\CheckUser;
+use App\Http\Middleware\CheckVet;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -27,8 +28,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'checkRole' => CheckRole::class,
             'admin' => CheckAdmin::class,
             'user' => CheckUser::class,
-            // 'employer' => CheckEmployer::class,
-            // 'jobseeker' => CheckJobseeker::class,
+            'vet' => CheckVet::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

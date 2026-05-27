@@ -163,7 +163,17 @@
     <div class="layout" id="layout">
 
         {{-- SIDEBAR --}}
-        @include('admin.layouts.sidebar')
+       @if (auth()->user()->role === 'admin')
+
+     @include('admin.layouts.sidebar')
+
+     @elseif(auth()->user()->role === 'user')
+
+        @include('user.layouts.sidebar')
+
+        @elseif(auth()->user()->role === 'vet')
+
+     @include('vet.layouts.sidebar') @endif
 
         <div class="main">
 
