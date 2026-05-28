@@ -29,10 +29,18 @@ Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function 
     Route::post('/settings/update', [AdminController::class, 'update'])->name('admin.update');
     Route::post('/settings/password', [AdminController::class, 'updatePassword'])->name('admin.update.password');
     Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
+    Route::get('/vets/fetch', [AdminController::class, 'fetchVets'])->name('admin.vets.fetch');
+    Route::post('/create/vet', [AdminController::class, 'createVet'])->name('admin.vet.create');
+    Route::delete('/vets/delete/{id}', [AdminController::class, 'deleteVet']);
+    Route::get('/vets/show/{id}', [AdminController::class, 'showVet']);
+    Route::post('/vets/update-status',[AdminController::class, 'toggleVetStatus'])->name('admin.vets.updateStatus');
 });
 
 Route::prefix('vet')->middleware(['auth', 'checkRole:vet'])->group(function () {
     Route::get('/dashboard', [VetController::class, 'dashboard'])->name('vet.dashboard');
+    Route::get('/settings', [VetController::class, 'vetSettings'])->name('vet.settings');
+    Route::post('/settings/update', [VetController::class, 'updateVet'])->name('vet.settings.update');
+    Route::post('/settings/change-password', [VetController::class, 'updateVetPassword'])->name('vet.settings.change.password');
 
 });
 
@@ -41,7 +49,8 @@ Route::prefix('user')->middleware(['auth', 'checkRole:user'])->group(function ()
     Route::get('/settings', [UserController::class, 'userSettings'])->name('user.settings');
     Route::post('/settings/update', [UserController::class, 'updateUser'])->name('user.update');
     Route::post('/settings/password', [UserController::class, 'updateUserPassword'])->name('user.update.password');
-
+    Route::get('/pets', [UserController::class, 'petList'])->name('user.pets');
+    Route::post('/pets/add', [UserController::class, 'createPet'])->name('user.pets.add');
 });
 
 

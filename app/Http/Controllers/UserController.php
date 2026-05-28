@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Request;
-
-// use Illuminate\Http\Request;
+use App\Models\Breeds;
+use App\Models\Pets;
+use App\Models\Species;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -18,7 +19,18 @@ class UserController extends Controller
         return view('user.settings');
     }
 
-     public function updateUser(Request $request)
+    public function petList()
+    {
+        $species = Species::all();
+        $breeds = Breeds::all();
+
+        $pets = auth()->user()->pets()->latest()->paginate(6);
+
+        return view('user.pets', compact('pets', 'species', 'breeds'));
+    }
+
+
+    public function updateUser(Request $request)
     {
         $user = auth()->user();
 
@@ -92,6 +104,57 @@ class UserController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Password changed successfully!'
+        ]);
+    }
+
+    public function createPet(Request $request)
+    {
+        $request->validate([
+            'pet_name' => 'required|string|max:255',
+            'species_name' => 'required|string|max:255',
+            'breed_name' => 'required|string|max:255',
+            'gender' => 'required|string|max:50',
+            'age' => 'required|integer|min:0',
+        ]);
+
+        // CHECK DUPLICATE PET
+        $exists = Pets::where('user_id', auth()->id())
+            ->where('pet_name', $request->pet_name)
+            ->exists();
+
+        if ($exists) {
+
+            return response()->json([
+                'status' => 0,
+                'message' => 'Pet already exists.'
+            ], 422);
+        }
+
+        // FIND OR CREATE SPECIES
+        $species = Species::firstOrCreate([
+            'species_name' => ucwords(trim($request->species_name))
+        ]);
+
+        // FIND OR CREATE BREED
+        $breed = Breeds::firstOrCreate([
+            'breed_name' => ucwords(trim($request->breed_name)),
+            'species_id' => $species->id
+        ]);
+
+        // CREATE PET
+        $pet = Pets::create([
+            'pet_name' => $request->pet_name,
+            'species_id' => $species->id,
+            'breed_id' => $breed->id,
+            'gender' => $request->gender,
+            'age' => $request->age,
+            'user_id' => auth()->id(),
+        ]);
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Pet added successfully!',
+            'pet' => $pet
         ]);
     }
 }

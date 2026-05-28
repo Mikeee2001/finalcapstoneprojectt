@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('veterinarian', function (Blueprint $table) {
             $table->id();
-            $table->string('specialization');
-            $table->integer('license_number');
+            $table->string('license_number');
             $table->date('hire_date');
             $table->timestamps();
-            $table->unsignedBigInteger('user_id')->unique();
+            $table->enum('status', ['available', 'not_available'])->default('available');
+
+            $table->unsignedBigInteger('user_id');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

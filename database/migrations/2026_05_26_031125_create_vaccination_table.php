@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->unsignedBigInteger('consultation_id')->unique();
+            $table->unsignedBigInteger('consultation_id');
 
             $table->foreign('consultation_id')->references('id')->on('consultation')->onDelete('cascade');
 

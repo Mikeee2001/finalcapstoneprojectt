@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\VetAccountMail;
+use App\Models\Specialization;
 use App\Models\User;
+use App\Models\Vet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 
 class AdminController extends Controller
@@ -27,9 +33,67 @@ class AdminController extends Controller
 
     public function userList()
     {
-        $users = User::simplePaginate(10);
+        $users = User::whereIn('role', ['admin','user'])->orderBy('created_at', 'desc')
+            ->simplePaginate(10);
+
         return view('admin.users', compact('users'));
     }
+
+    public function toggleVetStatus(Request $request)
+    {
+        $request->validate([
+
+            'vet_id' => 'required|exists:veterinarian,id',
+            'status' => 'required|in:available,not_available'
+
+        ]);
+
+        $vet = Vet::findOrFail($request->vet_id);
+        $vet->update([
+            'status' => $request->status
+        ]);
+        return response()->json([
+            'status' => 1,
+            'message' => 'Vet status updated successfully.'
+
+        ]);
+    }
+
+    // ==========================
+    // FETCH VETS
+    // ==========================
+    public function fetchVets()
+    {
+        $vets = Vet::with(['user', 'specializations'])->get();
+
+        $formatted = $vets->map(function ($vet) {
+
+            return [
+
+                'id' => $vet->id,
+
+                'fullname' => $vet->user->fullname ?? 'N/A',
+
+                'email' => $vet->user->email ?? 'N/A',
+
+                'specialization' => $vet->specializations
+                    ->pluck('specialization_name')
+                    ->implode(', '),
+
+                'license' => $vet->license_number,
+
+                'hired' => $vet->hire_date,
+
+                'role' => 'Veterinarian',
+
+                'status' => $vet->status,
+
+            ];
+        });
+
+        return response()->json($formatted);
+    }
+
 
     public function fetch()
     {
@@ -155,5 +219,140 @@ class AdminController extends Controller
         ]);
     }
 
+    // ==========================
+    // CREATE VET
+    // ==========================
+
+    public function createVet(Request $request)
+    {
+        $request->validate([
+
+            'fullname' => 'required|string|max:255',
+
+            'email' => 'required|email|unique:users,email',
+
+            'license_number' => 'required|string|unique:veterinarian,license_number',
+
+            'hire_date' => 'required|date',
+
+        ]);
+
+        // GENERATE TEMP PASSWORD
+        $tempPassword = Str::random(8);
+
+        // CREATE USER
+        $user = User::create([
+
+            'fullname' => $request->fullname,
+
+            'email' => $request->email,
+
+            'password' => Hash::make($tempPassword),
+
+            'role' => 'vet',
+
+        ]);
+
+        // CREATE VET
+        $vet = Vet::create([
+
+            'user_id' => $user->id,
+
+            'license_number' => $request->license_number,
+
+            'hire_date' => $request->hire_date,
+
+            'status' => 'available',
+
+        ]);
+
+        // ARRAY FOR ALL SPECIALIZATION IDS
+        $specializationIds = [];
+
+        // EXISTING SPECIALIZATIONS
+        if ($request->specializations) {
+
+            $specializationIds = $request->specializations;
+
+        }
+
+        // NEW SPECIALIZATIONS
+        if ($request->new_specializations) {
+
+            $newSpecializations = explode(',', $request->new_specializations);
+
+            foreach ($newSpecializations as $specializationName) {
+
+                $specializationName = trim($specializationName);
+
+                if ($specializationName != '') {
+
+                    // CHECK IF EXISTS
+                    $specialization = Specialization::firstOrCreate([
+
+                        'specialization_name' => $specializationName
+
+                    ]);
+
+                    $specializationIds[] = $specialization->id;
+
+                }
+
+            }
+
+        }
+
+        // ATTACH SPECIALIZATIONS
+        $vet->specializations()->sync($specializationIds);
+
+        // SEND EMAIL
+        Mail::to($user->email)->send(
+            new VetAccountMail($user, $tempPassword)
+        );
+
+        return response()->json([
+
+            'status' => 1,
+
+            'message' => 'Veterinarian created successfully.'
+
+        ]);
+    }
+
+
+    // ==========================
+    // DELETE VET
+    // ==========================
+
+    public function deleteVet($id)
+    {
+
+        $vet = User::findOrFail($id);
+
+        $vet->delete();
+
+        return response()->json([
+
+            'status' => 1,
+            'message' => 'Veterinarian deleted successfully.'
+
+        ]);
+
+    }
+
+
+    // ==========================
+    // SHOW VET
+    // ==========================
+
+    public function showVet($id)
+    {
+
+        $vet = Vet::with(['user', 'specializations'])
+            ->findOrFail($id);
+
+        return response()->json($vet);
+
+    }
 
 }

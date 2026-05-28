@@ -20,10 +20,12 @@
                     </small>
                 </div>
 
-                <button class="btn btn-primary rounded-pill px-4 shadow-sm" data-toggle="modal" data-target="#createModal">
+                <button class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal"
+                    data-bs-target="#createModal">
 
-                    <i class="fas fa-plus-circle mr-2"></i>
+                    <i class="fas fa-plus-circle me-2"></i>
                     Add User
+
                 </button>
 
             </div>
@@ -39,7 +41,6 @@
                             <tr>
                                 <th>No.</th>
                                 <th>Fullname</th>
-                                <th>Email</th>
                                 <th>Role</th>
                                 <th width="180">Action</th>
                             </tr>
@@ -57,6 +58,178 @@
 
     </div>
 
+    <!-- VETS TABLE -->
+    <div class="card border-0 shadow-lg rounded-4 mt-4">
+
+        <!-- HEADER -->
+        <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+
+            <div>
+                <h3 class="mb-0 fw-bold text-dark">
+                    Veterinarian Management
+                </h3>
+
+                <small class="text-muted">
+                    Manage all veterinarians
+                </small>
+            </div>
+
+            <button class="btn btn-success rounded-pill px-4 shadow-sm" data-bs-toggle="modal"
+                data-bs-target="#createVetModal">
+
+                <i class="fas fa-user-doctor mr-2"></i>
+                Add Veterinarian
+
+            </button>
+
+        </div>
+
+        <!-- BODY -->
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table align-middle table-hover text-center" id="vetTable">
+
+                    <thead class="bg-light">
+
+                        <tr>
+                            <th>No.</th>
+                            <th>Fullname</th>
+                            <th>Specialization</th>
+                            <th>License</th>
+                            <th>Hired Date</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th width="180">Action</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CREATE VET MODAL -->
+    <div class="modal fade" id="createVetModal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <!-- HEADER -->
+                <div class="modal-header bg-success text-white border-0">
+
+                    <h5 class="modal-title fw-bold">
+
+                        <i class="fa-solid fa-user-doctor me-2"></i>
+                        Create Veterinarian
+
+                    </h5>
+
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body p-4">
+
+                    <form id="createVetForm">
+
+                        @csrf
+
+                        <div class="row">
+
+                            <!-- FULLNAME -->
+                            <div class="col-md-6 mb-3">
+
+                                <label class="fw-bold mb-2">
+                                    Fullname
+                                </label>
+
+                                <input type="text" name="fullname" class="form-control rounded-pill"
+                                    placeholder="Enter fullname">
+
+                            </div>
+
+                            <!-- EMAIL -->
+                            <div class="col-md-6 mb-3">
+
+                                <label class="fw-bold mb-2">
+                                    Email Address
+                                </label>
+
+                                <input type="email" name="email" class="form-control rounded-pill"
+                                    placeholder="Enter email">
+
+                            </div>
+
+                            <!-- ADD NEW SPECIALIZATION -->
+                            <div class="col-12 mb-3">
+
+                                <label class="fw-bold mb-2">
+                                    Add New Specialization
+                                </label>
+
+                                <input type="text" name="new_specializations" class="form-control rounded-pill"
+                                    placeholder="Example: Surgery, Cardiology, Dentistry">
+
+                                <small class="text-muted">
+                                    Separate multiple specializations with commas.
+                                </small>
+
+                            </div>
+
+                            <!-- LICENSE NUMBER -->
+                            <div class="col-md-6 mb-3">
+
+                                <label class="fw-bold mb-2">
+                                    License Number
+                                </label>
+
+                                <input type="text" name="license_number" class="form-control rounded-pill"
+                                    placeholder="Enter license number">
+
+                            </div>
+
+                            <!-- HIRE DATE -->
+                            <div class="col-md-6 mb-3">
+
+                                <label class="fw-bold mb-2">
+                                    Hire Date
+                                </label>
+
+                                <input type="date" name="hire_date" class="form-control rounded-pill">
+
+                            </div>
+
+                        </div>
+
+                        <!-- BUTTON -->
+                        <button type="submit" class="btn btn-success w-100 rounded-pill py-2 shadow-sm mt-3">
+
+                            <i class="fas fa-save me-2"></i>
+                            Save Veterinarian
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
     <!-- CREATE MODAL -->
     <div class="modal fade" id="createModal">
@@ -129,7 +302,7 @@
                         </div>
 
                         <!-- BUTTON -->
-                        <button class="btn btn-primary btn-block rounded-pill py-2 shadow-sm">
+                        <button class="btn btn-primary w-100 rounded-pill py-2 shadow-sm">
 
                             <i class="fas fa-save mr-2"></i>
                             Save User
@@ -200,6 +373,13 @@
         .form-control:focus {
             border-color: #007bff;
         }
+
+        .form-select[multiple] {
+            height: auto !important;
+            min-height: 140px;
+            border-radius: 15px;
+            padding: 10px;
+        }
     </style>
 
 
@@ -242,8 +422,6 @@
                                 ${user.fullname}
                             </div>
                         </td>
-
-                        <td>${user.email}</td>
 
                         <td>${badge}</td>
 
@@ -417,11 +595,6 @@
                         </p>
 
                         <p>
-                            <strong>Email:</strong><br>
-                            ${user.email}
-                        </p>
-
-                        <p>
                             <strong>Role:</strong><br>
                             ${user.role}
                         </p>
@@ -429,6 +602,372 @@
                     </div>
                 `
                     });
+
+                });
+
+            });
+
+        });
+
+        $(document).ready(function() {
+
+            // ==========================
+            // LOAD VETS
+            // ==========================
+
+            loadVets();
+
+            function loadVets() {
+
+                // DESTROY EXISTING DATATABLE
+                if ($.fn.DataTable.isDataTable('#vetTable')) {
+                    $('#vetTable').DataTable().destroy();
+                }
+
+                $.ajax({
+
+                    url: "/admin/vets/fetch",
+                    type: "GET",
+
+                    success: function(vets) {
+
+                        let rows = "";
+
+                        vets.forEach(function(vet) {
+
+                            rows += `
+                                    <tr>
+
+                                        <td>#${vet.id}</td>
+
+                                        <td>
+                                            <div class="font-weight-bold">
+                                                ${vet.fullname}
+                                            </div>
+                                        </td>
+
+                                        <td>${vet.specialization}</td>
+
+                                        <td>${vet.license}</td>
+
+                                        <td>${vet.hired}</td>
+
+                                        <td>
+                                            <span class="badge badge-success px-3 py-2 rounded-pill">
+                                                ${vet.role}
+                                            </span>
+                                        </td>
+
+                                       <td>
+                                        <div class="form-check form-switch">
+
+                                            <input
+                                                class="form-check-input vetStatusToggle"
+                                                type="checkbox"
+                                                data-id="${vet.id}"
+                                                ${vet.status === 'available' ? 'checked' : ''}>
+
+                                            <label class="statusLabel fw-bold ms-2">
+
+                                                ${vet.status === 'available'
+                                                    ? '<span class="text-success">Available</span>'
+                                                    : '<span class="text-danger">Not Available</span>'
+                                                }
+
+                                            </label>
+
+                                         </div>
+                                    </td>
+
+                                        <td>
+
+                                            <button class="btn btn-info btn-sm rounded-pill px-3 vetViewBtn"
+                                                    data-id="${vet.id}">
+                                                View
+                                            </button>
+
+                                            <button class="btn btn-danger btn-sm rounded-pill px-3 vetDeleteBtn"
+                                                    data-id="${vet.id}">
+                                                Delete
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+                                    `;
+                        });
+
+                        $("#vetTable tbody").html(rows);
+
+                        // REINITIALIZE DATATABLE
+                        $('#vetTable').DataTable({
+                            responsive: true,
+                            pageLength: 5,
+                            destroy: true
+                        });
+
+                    },
+
+                    error: function() {
+
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: "Failed to load veterinarians."
+                        });
+
+                    }
+
+                });
+
+                $(document).on("change", ".vetStatusToggle", function() {
+
+                    let vetId = $(this).data("id");
+
+                    let status = $(this).is(":checked") ?
+                        "available" :
+                        "not_available";
+
+                    let label = $(this).siblings(".statusLabel");
+
+                    // CHANGE LABEL COLOR
+                    if (status === "available") {
+
+                        label.html(
+                            '<span class="text-success">Available</span>'
+                        );
+
+                    } else {
+
+                        label.html(
+                            '<span class="text-danger">Not Available</span>'
+                        );
+
+                    }
+
+                    $.ajax({
+
+                        url: "/admin/vets/update-status",
+
+                        type: "POST",
+
+                        data: {
+
+                            _token: "{{ csrf_token() }}",
+
+                            vet_id: vetId,
+
+                            status: status
+
+                        }
+
+                    });
+
+                });
+
+
+            }
+
+
+            // ==========================
+            // CREATE VET
+            // ==========================
+
+            $("#createVetForm").submit(function(e) {
+
+                e.preventDefault();
+
+                $.ajax({
+
+                    url: "/admin/create/vet",
+                    type: "POST",
+                    data: $(this).serialize(),
+
+                    beforeSend: function() {
+
+                        $("#createVetForm button[type='submit']")
+                            .prop("disabled", true)
+                            .html("Saving...");
+
+                    },
+
+                    success: function(res) {
+
+                        // CLOSE MODAL
+                        $("#createVetModal").modal("hide");
+
+                        // RESET FORM
+                        $("#createVetForm")[0].reset();
+
+                        // ENABLE BUTTON
+                        $("#createVetForm button[type='submit']")
+                            .prop("disabled", false)
+                            .html("Save Veterinarian");
+
+                        // SUCCESS MESSAGE
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success",
+                            text: res.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+
+                        // RELOAD TABLE
+                        loadVets();
+
+                    },
+
+                    error: function(xhr) {
+
+                        $("#createVetForm button[type='submit']")
+                            .prop("disabled", false)
+                            .html("Save Veterinarian");
+
+                        let errorMessage = "Something went wrong.";
+
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: errorMessage
+                        });
+
+                    }
+
+                });
+
+            });
+
+
+            // ==========================
+            // DELETE VET
+            // ==========================
+
+            $(document).on("click", ".vetDeleteBtn", function() {
+
+                let id = $(this).data("id");
+
+                Swal.fire({
+
+                    title: "Delete veterinarian?",
+                    text: "This action cannot be undone.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#dc3545",
+                    confirmButtonText: "Yes, Delete"
+
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+
+                            url: "/admin/vets/delete/" + id,
+                            type: "DELETE",
+
+                            data: {
+                                _token: $('meta[name="csrf-token"]').attr('content')
+                            },
+
+                            success: function(res) {
+
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Deleted",
+                                    text: res.message,
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+
+                                loadVets();
+
+                            },
+
+                            error: function() {
+
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: "Failed to delete veterinarian."
+                                });
+
+                            }
+
+                        });
+
+                    }
+
+                });
+
+            });
+
+
+            // ==========================
+            // VIEW VET
+            // ==========================
+
+            $(document).on("click", ".vetViewBtn", function() {
+
+                let id = $(this).data("id");
+
+                $.ajax({
+
+                    url: "/admin/vets/show/" + id,
+                    type: "GET",
+
+                    success: function(vet) {
+
+                        Swal.fire({
+
+                            title: "Veterinarian Information",
+
+                            html: `
+                            <div class="text-left">
+
+                                <p>
+                                    <strong>Fullname:</strong><br>
+                                    ${vet.user.fullname}
+                                </p>
+
+                                <p>
+                                    <strong>Email:</strong><br>
+                                    ${vet.user.email}
+                                </p>
+
+                                <p>
+                                    <strong>Specialization:</strong><br>
+                                    ${vet.specializations.map(s => s.specialization_name).join(', ')}
+                                </p>
+
+                                <p>
+                                    <strong>License:</strong><br>
+                                    ${vet.license_number}
+                                </p>
+                                <p></p>
+                                     <strong>Hire Date:</strong><br>
+                                    ${vet.hire_date}
+                                </p>
+
+                            </div>
+                            `
+
+                        });
+
+                    },
+
+                    error: function() {
+
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: "Failed to load veterinarian details."
+                        });
+
+                    }
 
                 });
 

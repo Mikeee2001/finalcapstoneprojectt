@@ -20,6 +20,9 @@
 
     <link rel="stylesheet" href="{{ asset('css/user.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin-sidebar.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/user-sidebar.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/vet-sidebar.css') }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 
     <style>
@@ -41,7 +44,7 @@
 
         /* SIDEBAR */
         .sidebar {
-            width: 230px;
+            width: 210px;
             background: linear-gradient(180deg, #1e3a8a, #2563eb);
             color: white;
             padding: 20px;
@@ -109,7 +112,7 @@
 
         /* HEADER */
         .topbar {
-            height: 75px;
+            height: 65px;
             background: white;
             display: flex;
             justify-content: space-between;
@@ -188,33 +191,41 @@
         </div>
     </div>
 
-    <!-- jQuery -->
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
+   <!-- JQUERY -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<!-- JQUERY UI -->
+<link rel="stylesheet"
+href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
-    <!-- Bootstrap JS (MISSING FIX) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- BOOTSTRAP 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+rel="stylesheet">
 
-    <!-- DataTables -->
-    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Responsive -->
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+<!-- DATATABLES -->
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 
-    <!-- SweetAlert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap4.min.js"></script>
 
-    <script>
-        function toggleSidebar() {
-            document.getElementById('layout').classList.toggle('collapsed');
-        }
-    </script>
+<!-- RESPONSIVE -->
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
-</body>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+
+<!-- SWEETALERT -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('layout')
+            .classList.toggle('collapsed');
+    }
+</script>
+
+    </body>
 
 </html>

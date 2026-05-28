@@ -1,12 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-<h1>heello ward</h1>
-</body>
-</html>
+@extends('layout.app')
+
+@section('content')
+    <div class="dashboard-content p-4">
+
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+
+            <div>
+
+                <h1 class="fw-bold text-dark">
+                    Welcome, Dr. {{ auth()->user()->fullname }}
+                </h1>
+
+                <p class="text-muted fs-5 mb-0">
+                    Veterinary Dashboard Overview
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+@endsection

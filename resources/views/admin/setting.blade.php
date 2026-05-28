@@ -49,23 +49,6 @@
                     </form>
                 </div>
 
-                <!-- SETTINGS -->
-                <div class="tab-pane fade" id="settings">
-                    <form id="settingsForm">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Role</label>
-                            <select name="role" class="form-control">
-                                <option value="" disabled>Select role</option>
-                                <option value="admin" {{ auth()->user()->role == 'admin' ? 'selected' : '' }}>Admin
-                                </option>
-                                <option value="user" {{ auth()->user()->role == 'user' ? 'selected' : '' }}>User</option>
-                                 <option value="vet" {{ auth()->user()->role == 'veterinarian' ? 'selected' : '' }}>Veterinarian</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-secondary">Save Settings</button>
-                    </form>
-                </div>
 
                 <!-- PASSWORD -->
                 <div class="tab-pane fade" id="password">

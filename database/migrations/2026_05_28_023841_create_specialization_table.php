@@ -4,20 +4,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('breeds', function (Blueprint $table) {
+        Schema::create('specialization', function (Blueprint $table) {
             $table->id();
-            $table->string('breed_name');
+            $table->string('specialization_name');
             $table->timestamps();
-            $table->unsignedBigInteger('species_id');
-
-            $table->foreign('species_id')->references('id')->on('species')->onDelete('cascade');
-
         });
     }
 
@@ -26,6 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('breeds');
+        Schema::dropIfExists('specialization');
     }
 };

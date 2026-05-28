@@ -18,8 +18,8 @@ return new class extends Migration {
             $table->text('treatment');
             $table->timestamps();
 
-            $table->unsignedBigInteger('vet_id')->unique();
-            $table->unsignedBigInteger('appointment_id')->unique();
+            $table->unsignedBigInteger('vet_id');
+            $table->unsignedBigInteger('appointment_id');
             $table->unsignedBigInteger('service_id');
 
             $table->foreign('vet_id')->references('id')->on('veterinarian')->onDelete('cascade');

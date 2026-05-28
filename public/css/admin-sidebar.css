@@ -97,3 +97,27 @@ body {
     flex: 1;
     padding: 20px;
 }
+
+.submenu {
+    list-style: none;
+    padding-left: 35px;
+    margin-top: 8px;
+    display: none;
+}
+
+.submenu li {
+    margin-bottom: 8px;
+}
+
+.submenu a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.submenu a:hover,
+.submenu a.active {
+    opacity: 1;
+    font-weight: bold;
+}

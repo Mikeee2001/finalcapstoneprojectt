@@ -16,12 +16,13 @@ return new class extends Migration {
             $table->integer('age');
             $table->string('gender');
             $table->timestamps();
-            $table->unsignedBigInteger('species_id')->unique();
-            $table->unsignedBigInteger('user_id')->unique();
-
+            $table->unsignedBigInteger('species_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('breed_id');
 
             $table->foreign('species_id')->references('id')->on('species')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('breed_id')->references('id')->on('breeds')->onDelete('cascade');
         });
     }
 

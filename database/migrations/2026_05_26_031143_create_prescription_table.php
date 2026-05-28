@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('recommendations')->nullable();
             $table->timestamps();
 
-            $table->unsignedBigInteger('consultation_id')->unique();
-            $table->unsignedBigInteger('veterinarian_id')->unique();
+            $table->unsignedBigInteger('consultation_id');
+            $table->unsignedBigInteger('veterinarian_id');
 
             $table->foreign('consultation_id')->references('id')->on('consultation')->onDelete('cascade');
             $table->foreign('veterinarian_id')->references('id')->on('veterinarian')->onDelete('cascade');
