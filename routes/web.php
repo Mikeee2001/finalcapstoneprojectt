@@ -51,6 +51,7 @@ Route::prefix('user')->middleware(['auth', 'checkRole:user'])->group(function ()
     Route::post('/settings/password', [UserController::class, 'updateUserPassword'])->name('user.update.password');
     Route::get('/pets', [UserController::class, 'petList'])->name('user.pets');
     Route::post('/pets/add', [UserController::class, 'createPet'])->name('user.pets.add');
+    Route::delete('/pets/delete/{id}', [UserController::class, 'deletePet'])->name('user.pets.delete');
 });
 
 

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('medicine_name');
             $table->text('medicine_description')->nullable();
-            $table->integer('stocks');
             $table->decimal('price', 10, 2);
             $table->timestamps();
 

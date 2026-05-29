@@ -17,6 +17,7 @@ class Vet extends Model
         'user_id',
         'specialization_vet',
         'specialization_id',
+        'image',
     ];
 
     public function user()

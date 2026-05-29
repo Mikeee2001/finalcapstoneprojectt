@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Breeds;
-use App\Models\Pets;
 use Illuminate\Database\Eloquent\Model;
 
 class Species extends Model
@@ -19,8 +18,4 @@ class Species extends Model
         return $this->hasMany(Breeds::class);
     }
 
-    public function pets()
-    {
-        return $this->hasMany(Pets::class);
-    }
 }

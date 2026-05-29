@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('frequency')->nullable();
             $table->string('days')->nullable();
             $table->string('instructions')->nullable();
+            $table->integer('quantity');
             $table->timestamps();
 
             $table->unsignedBigInteger('prescription_id');

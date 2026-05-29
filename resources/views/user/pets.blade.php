@@ -23,43 +23,80 @@
 
         <!-- PETS GRID -->
         <div id="pets-container">
-
             <div class="row">
 
                 @forelse($pets as $pet)
                     <div class="col-md-6 col-lg-4 mb-4">
 
-                        <div class="card border-0 shadow-sm rounded-4 h-100 pet-card">
+                        <div class="card pet-card border-0 shadow-sm rounded-4 h-100">
 
-                            <div class="card-body">
+                            <div class="card-body p-4">
 
-                                <!-- ICON -->
+                                <!-- TOP -->
+                                <div class="d-flex justify-content-end mb-3">
+
+                                    <span class="badge bg-primary px-3 py-2 rounded-pill">
+                                        {{ $pet->gender }}
+                                    </span>
+
+                                </div>
+
                                 <div class="pet-icon mb-3">
-                                    <i class="fa-solid fa-paw"></i>
+
+                                    @if ($pet->pet_image)
+                                        <img src="{{ asset('pet_images/' . $pet->pet_image) }}" class="pet-img">
+                                    @else
+                                        <i class="fa-solid fa-paw"></i>
+                                    @endif
+
                                 </div>
 
                                 <!-- PET NAME -->
-                                <h5 class="fw-bold mb-3">
+                                <h4 class="fw-bold text-dark mb-3">
                                     {{ $pet->pet_name }}
-                                </h5>
+                                </h4>
 
                                 <!-- DETAILS -->
                                 <div class="pet-details">
 
-                                    <p class="mb-2">
-                                        <strong>Species:</strong>
-                                        {{ $pet->species->species_name ?? 'N/A' }}
-                                    </p>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Species</span>
+                                        <span class="detail-value">
+                                            {{ $pet->species->species_name ?? 'N/A' }}
+                                        </span>
+                                    </div>
 
-                                    <p class="mb-2">
-                                        <strong>Breed:</strong>
-                                        {{ $pet->breed->breed_name ?? 'N/A' }}
-                                    </p>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Breed</span>
+                                        <span class="detail-value">
+                                            {{ $pet->breed->breed_name ?? 'N/A' }}
+                                        </span>
+                                    </div>
 
-                                    <p class="mb-0">
-                                        <strong>Age:</strong>
-                                        {{ $pet->age }} years old
-                                    </p>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Age</span>
+                                        <span class="detail-value">
+                                            {{ $pet->age }} {{ $pet->age_type }}
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                                <!-- ACTIONS -->
+                                <div class="d-flex gap-2 mt-4">
+
+                                    {{-- <button class="btn btn-primary btn-sm flex-fill rounded-pill">
+                                        <i class="fa-solid fa-eye me-1"></i>
+                                        View
+                                    </button> --}}
+
+                                    <button class="btn btn-outline-danger btn-sm flex-fill rounded-pill deleteBtn"
+                                        data-id="{{ $pet->id }}">
+
+                                        <i class="fa-solid fa-trash me-1"></i>
+                                        Delete
+
+                                    </button>
 
                                 </div>
 
@@ -77,13 +114,23 @@
 
                             <div class="card-body text-center py-5">
 
-                                <i class="fa-solid fa-paw fa-3x text-muted mb-3"></i>
+                                <div class="empty-icon mb-3">
+                                    <i class="fa-solid fa-paw"></i>
+                                </div>
 
-                                <h5>No pets found</h5>
+                                <h4 class="fw-bold">
+                                    No Pets Found
+                                </h4>
 
-                                <p class="text-muted">
+                                <p class="text-muted mb-4">
                                     Add your first pet to get started.
                                 </p>
+
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#createPetModal">
+                                    <i class="fa-solid fa-plus me-2"></i>
+                                    Add Pet
+                                </button>
 
                             </div>
 
@@ -93,7 +140,6 @@
                 @endforelse
 
             </div>
-
         </div>
 
         <!-- PAGINATION -->
@@ -101,19 +147,21 @@
             {{ $pets->links() }}
         </div>
 
+
     </div>
+
 
     <!-- ADD PET MODAL -->
     <div class="modal fade" id="createPetModal" tabindex="-1" aria-hidden="true">
 
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
 
-            <div class="modal-content border-0 rounded-4">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
 
                 <!-- HEADER -->
                 <div class="modal-header bg-primary text-white">
 
-                    <h5 class="modal-title">
+                    <h5 class="modal-title fw-bold">
                         Add New Pet
                     </h5>
 
@@ -123,98 +171,146 @@
                 </div>
 
                 <!-- FORM -->
-                <form id="addPetForm" action="{{ route('user.pets.add') }}" method="POST">
+                <form id="addPetForm" action="{{ route('user.pets.add') }}" method="POST" enctype="multipart/form-data">
 
                     @csrf
 
-                    <div class="modal-body">
+                    <div class="modal-body p-4">
 
-                        <!-- PET NAME -->
-                        <div class="mb-3">
+                        <div class="row g-4">
 
-                            <label class="form-label">
-                                Pet Name
-                            </label>
+                            <!-- LEFT SIDE -->
+                            <div class="col-lg-5">
 
-                            <input type="text" name="pet_name" class="form-control" placeholder="Enter pet name"
-                                required>
+                                <!-- PET IMAGE -->
+                                <div class="mb-4">
 
-                        </div>
+                                    <label class="form-label fw-semibold">
+                                        Pet Image
+                                    </label>
 
-                        <!-- SPECIES -->
-                        <div class="mb-3">
+                                    <input type="file" name="pet_image" class="form-control" accept="image/*">
 
-                            <label class="form-label">
-                                Species
-                            </label>
+                                </div>
 
-                            <input type="text" name="species_name" placeholder="Enter species" id="species_name"
-                                class="form-control" autocomplete="off" required>
+                                <!-- PET NAME -->
+                                <div class="mb-4">
 
-                        </div>
+                                    <label class="form-label fw-semibold">
+                                        Pet Name
+                                    </label>
 
-                        <!-- BREED -->
-                        <div class="mb-3">
+                                    <input type="text" name="pet_name" class="form-control" placeholder="Enter pet name"
+                                        required>
 
-                            <label class="form-label">
-                                Breed
-                            </label>
+                                </div>
 
-                            <input type="text" name="breed_name" id="breed_name" placeholder="Enter breed"
-                                class="form-control" autocomplete="off" required>
+                                <!-- GENDER -->
+                                <div class="mb-4">
 
+                                    <label class="form-label fw-semibold">
+                                        Gender
+                                    </label>
 
-                        </div>
+                                    <select name="gender" class="form-select" required>
 
-                        <!-- GENDER -->
-                        <div class="mb-3">
+                                        <option value="">
+                                            Select Gender
+                                        </option>
 
-                            <label class="form-label">
-                                Gender
-                            </label>
+                                        <option value="Male">
+                                            Male
+                                        </option>
 
-                            <select name="gender" class="form-control" required>
+                                        <option value="Female">
+                                            Female
+                                        </option>
 
-                                <option value="">
-                                    Select Gender
-                                </option>
+                                    </select>
 
-                                <option value="Male">
-                                    Male
-                                </option>
+                                </div>
 
-                                <option value="Female">
-                                    Female
-                                </option>
+                            </div>
 
-                            </select>
+                            <!-- RIGHT SIDE -->
+                            <div class="col-lg-7">
 
-                        </div>
+                                <!-- SPECIES -->
+                                <div class="mb-4">
 
-                        <!-- AGE -->
-                        <div class="mb-3">
+                                    <label class="form-label fw-semibold">
+                                        Species
+                                    </label>
 
-                            <label class="form-label">
-                                Age
-                            </label>
+                                    <input type="text" name="species_name" id="species_name" class="form-control"
+                                        placeholder="Enter species" autocomplete="off" required>
 
-                            <input type="number" name="age" class="form-control" min="0" placeholder="Enter age"
-                                required>
+                                </div>
+
+                                <!-- BREED -->
+                                <div class="mb-4">
+
+                                    <label class="form-label fw-semibold">
+                                        Breed
+                                    </label>
+
+                                    <input type="text" name="breed_name" id="breed_name" class="form-control"
+                                        placeholder="Enter breed" autocomplete="off" required>
+
+                                </div>
+
+                                <!-- AGE -->
+                                <div class="mb-4">
+
+                                    <label class="form-label fw-semibold">
+                                        Age
+                                    </label>
+
+                                    <div class="row g-2">
+
+                                        <div class="col-md-6">
+
+                                            <input type="number" name="age" class="form-control" min="0"
+                                                placeholder="Enter age" required>
+
+                                        </div>
+
+                                        <div class="col-md-6">
+
+                                            <select name="age_type" class="form-select" required>
+
+                                                <option value="months">
+                                                    Months
+                                                </option>
+
+                                                <option value="years">
+                                                    Years
+                                                </option>
+
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
 
                         </div>
 
                     </div>
 
                     <!-- FOOTER -->
-                    <div class="modal-footer">
+                    <div class="modal-footer px-4 pb-4 border-0">
 
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">
 
                             Cancel
 
                         </button>
 
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary px-4">
 
                             Save Pet
 
@@ -336,11 +432,16 @@
 
                 let form = $(this);
 
+                let formData = new FormData(this);
+
                 $.ajax({
 
                     url: form.attr('action'),
                     type: "POST",
-                    data: form.serialize(),
+                    data: formData,
+
+                    processData: false,
+                    contentType: false,
 
                     beforeSend: function() {
 
@@ -352,15 +453,13 @@
 
                     success: function(response) {
 
-                        // SUCCESS TOAST
                         Swal.fire({
                             toast: true,
                             position: 'top-end',
                             icon: 'success',
                             title: response.message,
                             showConfirmButton: false,
-                            timer: 2000,
-                            timerProgressBar: true
+                            timer: 2000
                         });
 
                         // CLOSE MODAL
@@ -374,10 +473,16 @@
                             .prop('disabled', false)
                             .html('Save Pet');
 
-                        // RELOAD PAGE
-                        setTimeout(function() {
-                            location.reload();
-                        }, 1500);
+                        // RELOAD PET LIST ONLY
+                        $("#pets-container").load(
+                            location.href + " #pets-container > *",
+                            function() {
+
+                                // OPTIONAL LOADER HIDE
+                                $("#pageLoader").fadeOut(200);
+
+                            }
+                        );
 
                     },
 
@@ -398,13 +503,81 @@
                             timer: 2500
                         });
 
-                        // ENABLE BUTTON
                         form.find("button[type='submit']")
                             .prop('disabled', false)
                             .html('Save Pet');
                     }
 
                 });
+
+            });
+
+        });
+    </script>
+    <script>
+        $(document).on("click", ".deleteBtn", function() {
+
+            let id = $(this).data("id");
+
+            Swal.fire({
+                title: "Delete this pet?",
+                text: "This action cannot be undone.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dc3545",
+                confirmButtonText: "Yes, Delete"
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+
+                    $("#pageLoader")
+                        .css("display", "flex")
+                        .hide()
+                        .fadeIn(200);
+
+                    $.ajax({
+
+                        url: "/user/pets/delete/" + id,
+                        type: "DELETE",
+
+                        data: {
+                            _token: "{{ csrf_token() }}"
+                        },
+
+                        success: function(res) {
+
+                            $("#pageLoader").fadeOut(200);
+
+                            Swal.fire({
+                                icon: "success",
+                                title: "Deleted",
+                                text: res.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+
+                            // RELOAD PETS ONLY
+                            $("#pets-container").load(
+                                location.href + " #pets-container > *"
+                            );
+
+                        },
+
+                        error: function() {
+
+                            $("#pageLoader").fadeOut(200);
+
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: "Failed to delete pet."
+                            });
+
+                        }
+
+                    });
+
+                }
 
             });
 

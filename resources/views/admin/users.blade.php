@@ -95,6 +95,7 @@
 
                         <tr>
                             <th>No.</th>
+                            <th>Image</th>
                             <th>Fullname</th>
                             <th>Specialization</th>
                             <th>License</th>
@@ -116,22 +117,19 @@
 
     </div>
 
-
     <!-- CREATE VET MODAL -->
     <div class="modal fade" id="createVetModal" tabindex="-1" aria-hidden="true">
 
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
 
             <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 
                 <!-- HEADER -->
-                <div class="modal-header bg-success text-white border-0">
+                <div class="modal-header bg-success text-white border-0 py-3">
 
                     <h5 class="modal-title fw-bold">
-
                         <i class="fa-solid fa-user-doctor me-2"></i>
                         Create Veterinarian
-
                     </h5>
 
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal">
@@ -140,86 +138,197 @@
                 </div>
 
                 <!-- BODY -->
-                <div class="modal-body p-4">
+                <div class="modal-body bg-light p-3">
 
-                    <form id="createVetForm">
+                    <form id="createVetForm" enctype="multipart/form-data">
 
                         @csrf
 
-                        <div class="row">
+                        <div class="row g-3">
 
-                            <!-- FULLNAME -->
-                            <div class="col-md-6 mb-3">
+                            <!-- LEFT SIDE -->
+                            <div class="col-lg-4 text-center">
 
-                                <label class="fw-bold mb-2">
-                                    Fullname
-                                </label>
+                                <div class="bg-white rounded-4 shadow-sm p-3 h-100">
 
-                                <input type="text" name="fullname" class="form-control rounded-pill"
-                                    placeholder="Enter fullname">
+                                    <label class="fw-bold mb-3 d-block">
+                                        Veterinarian Photo
+                                    </label>
+
+                                    <!-- IMAGE PREVIEW -->
+                                    <img id="previewImage" src="https://via.placeholder.com/200x200?text=Vet"
+                                        class="rounded-4 border shadow-sm mb-3"
+                                        style="
+                                        width: 200px;
+                                        height: 200px;
+                                        object-fit: cover;
+                                    ">
+
+                                    <!-- FILE INPUT -->
+                                    <input type="file" name="image" id="image" class="form-control rounded-pill">
+
+                                    <small class="text-muted d-block mt-2">
+                                        JPG, PNG, GIF (Max 2MB)
+                                    </small>
+
+                                    <!-- SPECIALIZATIONS -->
+                                    <div class="mt-4 text-start">
+
+                                        <label class="fw-bold mb-2">
+                                            Select Specializations
+                                        </label>
+
+                                        <<select name="specializations[]" id="specializations" class="form-select rounded-4"
+                                            multiple size="5">
+
+                                            @foreach ($specializations as $specialization)
+                                                <option value="{{ $specialization->id }}">
+
+                                                    {{ $specialization->specialization_name }}
+
+                                                </option>
+                                            @endforeach
+
+                                            </select>
+
+                                            <small class="text-muted">
+                                                Hold CTRL to select multiple.
+                                            </small>
+
+                                    </div>
+
+                                </div>
 
                             </div>
 
-                            <!-- EMAIL -->
-                            <div class="col-md-6 mb-3">
+                            <!-- RIGHT SIDE -->
+                            <div class="col-lg-8">
 
-                                <label class="fw-bold mb-2">
-                                    Email Address
-                                </label>
+                                <div class="bg-white rounded-4 shadow-sm p-4 h-100">
 
-                                <input type="email" name="email" class="form-control rounded-pill"
-                                    placeholder="Enter email">
+                                    <div class="row g-3">
 
-                            </div>
+                                        <!-- FULLNAME -->
+                                        <div class="col-md-6">
 
-                            <!-- ADD NEW SPECIALIZATION -->
-                            <div class="col-12 mb-3">
+                                            <label class="fw-bold mb-2">
+                                                Fullname
+                                            </label>
 
-                                <label class="fw-bold mb-2">
-                                    Add New Specialization
-                                </label>
+                                            <div class="input-group">
 
-                                <input type="text" name="new_specializations" class="form-control rounded-pill"
-                                    placeholder="Example: Surgery, Cardiology, Dentistry">
+                                                <span
+                                                    class="input-group-text bg-success text-white border-0 rounded-start-pill">
+                                                    <i class="fa-solid fa-user"></i>
+                                                </span>
 
-                                <small class="text-muted">
-                                    Separate multiple specializations with commas.
-                                </small>
+                                                <input type="text" name="fullname"
+                                                    class="form-control rounded-end-pill py-2" placeholder="Enter fullname">
 
-                            </div>
+                                            </div>
 
-                            <!-- LICENSE NUMBER -->
-                            <div class="col-md-6 mb-3">
+                                        </div>
 
-                                <label class="fw-bold mb-2">
-                                    License Number
-                                </label>
+                                        <!-- EMAIL -->
+                                        <div class="col-md-6">
 
-                                <input type="text" name="license_number" class="form-control rounded-pill"
-                                    placeholder="Enter license number">
+                                            <label class="fw-bold mb-2">
+                                                Email Address
+                                            </label>
 
-                            </div>
+                                            <div class="input-group">
 
-                            <!-- HIRE DATE -->
-                            <div class="col-md-6 mb-3">
+                                                <span
+                                                    class="input-group-text bg-success text-white border-0 rounded-start-pill">
+                                                    <i class="fa-solid fa-envelope"></i>
+                                                </span>
 
-                                <label class="fw-bold mb-2">
-                                    Hire Date
-                                </label>
+                                                <input type="email" name="email"
+                                                    class="form-control rounded-end-pill py-2" placeholder="Enter email">
 
-                                <input type="date" name="hire_date" class="form-control rounded-pill">
+                                            </div>
+
+                                        </div>
+
+                                        <!-- LICENSE -->
+                                        <div class="col-md-6">
+
+                                            <label class="fw-bold mb-2">
+                                                License Number
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <span
+                                                    class="input-group-text bg-success text-white border-0 rounded-start-pill">
+                                                    <i class="fa-solid fa-id-card"></i>
+                                                </span>
+
+                                                <input type="text" name="license_number"
+                                                    class="form-control rounded-end-pill py-2"
+                                                    placeholder="Enter license number">
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- HIRE DATE -->
+                                        <div class="col-md-6">
+
+                                            <label class="fw-bold mb-2">
+                                                Hire Date
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <span
+                                                    class="input-group-text bg-success text-white border-0 rounded-start-pill">
+                                                    <i class="fa-solid fa-calendar"></i>
+                                                </span>
+
+                                                <input type="date" name="hire_date"
+                                                    class="form-control rounded-end-pill py-2">
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- NEW SPECIALIZATION -->
+                                        <div class="col-12 mt-3">
+
+                                            <label class="fw-bold mb-2">
+                                                Add New Specialization
+                                            </label>
+
+                                            <input type="text" name="new_specializations"
+                                                class="form-control rounded-pill py-2"
+                                                placeholder="Example: Surgery, Cardiology, Dentistry">
+
+                                            <small class="text-muted">
+                                                Separate multiple specializations with commas.
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
 
                             </div>
 
                         </div>
 
                         <!-- BUTTON -->
-                        <button type="submit" class="btn btn-success w-100 rounded-pill py-2 shadow-sm mt-3">
+                        <div class="mt-4">
 
-                            <i class="fas fa-save me-2"></i>
-                            Save Veterinarian
+                            <button type="submit" class="btn btn-success w-100 rounded-pill py-3 fw-bold shadow-sm">
 
-                        </button>
+                                <i class="fas fa-save me-2"></i>
+                                Save Veterinarian
+
+                            </button>
+
+                        </div>
 
                     </form>
 
@@ -639,6 +748,7 @@
                                     <tr>
 
                                         <td>#${vet.id}</td>
+                                         <td><img src="${vet.image}" alt="Vet Image" class="img-thumbnail" style="max-width: 100px;"></td>
 
                                         <td>
                                             <div class="font-weight-bold">
@@ -646,7 +756,7 @@
                                             </div>
                                         </td>
 
-                                        <td>${vet.specialization}</td>
+                                        <td>${vet.specializations}</td>
 
                                         <td>${vet.license}</td>
 
@@ -702,8 +812,18 @@
                         // REINITIALIZE DATATABLE
                         $('#vetTable').DataTable({
                             responsive: true,
+
                             pageLength: 5,
-                            destroy: true
+
+                            lengthMenu: [
+                                [5, 10, 25, 50, 100],
+                                [5, 10, 25, 50, 100]
+                            ],
+
+                            language: {
+                                search: "_INPUT_",
+                                searchPlaceholder: "Search users...",
+                            }
                         });
 
                     },
@@ -768,20 +888,42 @@
 
             }
 
+            // ==========================
+            // IMAGE PREVIEW
+            // ==========================
+            $("#image").change(function() {
+
+                let reader = new FileReader();
+
+                reader.onload = function(e) {
+
+                    $("#previewImage").attr("src", e.target.result);
+
+                };
+
+                reader.readAsDataURL(this.files[0]);
+
+            });
+
 
             // ==========================
             // CREATE VET
             // ==========================
-
             $("#createVetForm").submit(function(e) {
 
                 e.preventDefault();
+
+                let formData = new FormData(this);
 
                 $.ajax({
 
                     url: "/admin/create/vet",
                     type: "POST",
-                    data: $(this).serialize(),
+
+                    data: formData,
+
+                    processData: false,
+                    contentType: false,
 
                     beforeSend: function() {
 
@@ -799,10 +941,19 @@
                         // RESET FORM
                         $("#createVetForm")[0].reset();
 
+                        // RESET IMAGE
+                        $("#previewImage").attr(
+                            "src",
+                            "https://via.placeholder.com/200x200?text=Vet"
+                        );
+
                         // ENABLE BUTTON
                         $("#createVetForm button[type='submit']")
                             .prop("disabled", false)
-                            .html("Save Veterinarian");
+                            .html(`
+                    <i class="fas fa-save me-2"></i>
+                    Save Veterinarian
+                `);
 
                         // SUCCESS MESSAGE
                         Swal.fire({
@@ -822,18 +973,25 @@
 
                         $("#createVetForm button[type='submit']")
                             .prop("disabled", false)
-                            .html("Save Veterinarian");
+                            .html(`
+                    <i class="fas fa-save me-2"></i>
+                    Save Veterinarian
+                `);
 
-                        let errorMessage = "Something went wrong.";
+                        let errors = xhr.responseJSON.errors;
 
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        }
+                        let errorMessage = "";
+
+                        $.each(errors, function(key, value) {
+
+                            errorMessage += value[0] + "<br>";
+
+                        });
 
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",
-                            text: errorMessage
+                            html: errorMessage
                         });
 
                     }
@@ -841,7 +999,6 @@
                 });
 
             });
-
 
             // ==========================
             // DELETE VET
@@ -927,6 +1084,21 @@
 
                             html: `
                             <div class="text-left">
+                                <div class="text-center mb-3">
+
+                                ${
+                                    vet.image
+                                    ? `<img src="${vet.image}"
+                                                    alt="Vet Image"
+                                                    class="rounded-4 shadow"
+                                                    width="140"
+                                                    height="140"
+                                                    style="object-fit: cover;">`
+                                    : 'No image available'
+                                }
+
+                            </div>
+
 
                                 <p>
                                     <strong>Fullname:</strong><br>

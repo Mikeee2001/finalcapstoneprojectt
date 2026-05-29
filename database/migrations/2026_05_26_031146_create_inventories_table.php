@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
             $table->string('batch_number')->nullable();
-            $table->integer('quantity');
+            $table->integer('stocks');
             $table->decimal('unit_cost', 10, 2);
             $table->date('expiration_date');
             $table->timestamps();
@@ -23,7 +23,6 @@ return new class extends Migration {
 
             $table->foreign('medicine_id')->references('id')->on('medicine')->onDelete('cascade');
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
-
 
         });
     }

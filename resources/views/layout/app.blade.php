@@ -22,6 +22,9 @@
     <link rel="stylesheet" href="{{ asset('css/admin-sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/user-sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/vet-sidebar.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pet-card.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
@@ -157,6 +160,7 @@
                 display: inline;
             }
         }
+
     </style>
 
 </head>
@@ -184,13 +188,14 @@
             @include('admin.layouts.header')
 
             {{-- PAGE CONTENT --}}
-            <div class="content">
+            <div class="content" id="main-content">
                 @yield('content')
             </div>
 
         </div>
     </div>
 
+    <script src="{{ asset('js/spinner.js') }}"></script>
    <!-- JQUERY -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

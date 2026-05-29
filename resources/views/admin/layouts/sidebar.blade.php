@@ -49,6 +49,22 @@
             </a>
         </li>
 
+        <!-- SERVICE -->
+        <li>
+            <a href="#" class="menu-link">
+                <i class="fa-solid fa-kit-medical"></i>
+                <span>Services</span>
+            </a>
+        </li>
+
+        <!-- INVENTORY -->
+        <li>
+            <a href="#" class="menu-link">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Inventory</span>
+            </a>
+        </li>
+
         <!-- SETTINGS -->
         <li>
             <a href="{{ route('admin.settings') }}"

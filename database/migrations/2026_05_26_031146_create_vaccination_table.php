@@ -18,8 +18,10 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->unsignedBigInteger('consultation_id');
+            $table->unsignedBigInteger('medicine_id');
 
             $table->foreign('consultation_id')->references('id')->on('consultation')->onDelete('cascade');
+            $table->foreign('medicine_id')->references('id')->on('medicine')->onDelete('cascade');
 
         });
     }

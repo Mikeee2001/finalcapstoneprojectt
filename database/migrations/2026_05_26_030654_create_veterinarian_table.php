@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('veterinarian', function (Blueprint $table) {
             $table->id();
+            $table->string('image');
             $table->string('license_number');
             $table->date('hire_date');
             $table->timestamps();

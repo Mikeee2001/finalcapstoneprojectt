@@ -1,0 +1,192 @@
+/* From Uiverse.io by faelpatrick */
+.gear-wrapper:active .gear.g2 {
+    position: relative;
+    animation: none;
+    transform: translateY(-100px);
+    transition: 2s;
+}
+
+.gear-wrapper:active .gear.g1 {
+    position: relative;
+    animation: none;
+    transform: translateX(-100px);
+    transition: 2s;
+}
+
+.gear-wrapper:active .gear.g3 {
+    position: relative;
+    animation: none;
+    transform: translateX(100px);
+    transition: 2s;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    user-select: none;
+}
+
+.container::before {
+    content: "";
+    background: #fff8;
+    width: 100%;
+    height: 16%;
+    top: -20%;
+    left: 0%;
+    position: absolute;
+    filter: blur(150px);
+}
+
+.container::after {
+    content: "";
+    background: #000;
+    width: 100%;
+    height: 20%;
+    bottom: -16%;
+    left: 0%;
+    position: absolute;
+    filter: blur(100px);
+}
+
+.gear-wrapper~.text {
+    opacity: 0;
+    transition: all 0.8s ease-in-out;
+    transform: skewX(2deg);
+    position: relative;
+    left: -500%;
+}
+
+.gear-wrapper:hover~.text {
+    opacity: 1;
+    color: #067c40;
+    font-size: 18pt;
+    font-weight: 600;
+    transition: all 0.8s ease-in-out;
+    transform: skewX(-12deg);
+    left: 0;
+}
+
+.gear-wrapper:hover::before {
+    width: 150px;
+    transition: all 0.3s ease-in-out;
+    right: 0;
+}
+
+.gear-wrapper::before {
+    content: "";
+    position: absolute;
+    background: #067c40aa;
+    height: 10px;
+    width: 60%;
+    top: 80px;
+    border-radius: 50%;
+    filter: blur(15px);
+}
+
+.gear-wrapper {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    position: relative;
+}
+
+.gear {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    animation: rotateGear 4s linear infinite;
+}
+
+.g1 {
+    position: relative;
+    left: 22px;
+}
+
+.g2 {
+    position: relative;
+    top: -25px;
+    animation: rotateGear 4s linear infinite reverse;
+    transition: 4s;
+}
+
+.g3 {
+    position: relative;
+    right: 22px;
+}
+
+.gear-wrapper:hover .g1,
+.gear-wrapper:hover .g3 {
+    animation: rotateGear 0.8s linear infinite;
+    filter: drop-shadow(1px 1px 2px #067c40);
+}
+
+.gear-wrapper:hover .g2 {
+    animation: rotateGear 0.8s linear infinite reverse;
+    filter: drop-shadow(1px 1px 2px #067c40);
+}
+
+@keyframes rotateGear {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* SPARKLES */
+.spark {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #067c40;
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.gear-wrapper .spark,
+.gear-wrapper:active .spark,
+.gear-wrapper:hover:active .spark {
+    opacity: 0;
+    left: 0;
+    animation: none;
+}
+
+.gear-wrapper:hover .spark {
+    opacity: 1;
+    animation: sparkLeft 0.4s ease-out forwards infinite;
+}
+
+.gear-wrapper:hover .spark:nth-child(1) {
+    top: 0%;
+    left: 50%;
+}
+
+.gear-wrapper:hover .spark:nth-child(2) {
+    top: 20%;
+    left: 50%;
+}
+
+.gear-wrapper:hover .spark:nth-child(3) {
+    top: 35%;
+    left: 50%;
+}
+
+@keyframes sparkLeft {
+    0% {
+        transform: translate(0, -50%) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-100px, -50%) scale(0.5);
+        opacity: 0;
+    }
+}

@@ -33,10 +33,10 @@ class AdminController extends Controller
 
     public function userList()
     {
-        $users = User::whereIn('role', ['admin','user'])->orderBy('created_at', 'desc')
+        $users = User::whereIn('role', ['admin', 'user'])->orderBy('created_at', 'desc')
             ->simplePaginate(10);
-
-        return view('admin.users', compact('users'));
+        $specializations = Specialization::all();
+        return view('admin.users', compact('users', 'specializations'));
     }
 
     public function toggleVetStatus(Request $request)
@@ -71,30 +71,23 @@ class AdminController extends Controller
             return [
 
                 'id' => $vet->id,
-
+                'image' => $vet->image
+                    ? asset('storage/' . $vet->image)
+                    : null,
                 'fullname' => $vet->user->fullname ?? 'N/A',
-
                 'email' => $vet->user->email ?? 'N/A',
-
-                'specialization' => $vet->specializations
+                'specializations' => $vet->specializations
                     ->pluck('specialization_name')
                     ->implode(', '),
-
                 'license' => $vet->license_number,
-
                 'hired' => $vet->hire_date,
-
                 'role' => 'Veterinarian',
-
                 'status' => $vet->status,
-
             ];
         });
 
         return response()->json($formatted);
     }
-
-
     public function fetch()
     {
         return response()->json(User::latest()->get());
@@ -226,15 +219,11 @@ class AdminController extends Controller
     public function createVet(Request $request)
     {
         $request->validate([
-
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'fullname' => 'required|string|max:255',
-
             'email' => 'required|email|unique:users,email',
-
             'license_number' => 'required|string|unique:veterinarian,license_number',
-
             'hire_date' => 'required|date',
-
         ]);
 
         // GENERATE TEMP PASSWORD
@@ -242,38 +231,32 @@ class AdminController extends Controller
 
         // CREATE USER
         $user = User::create([
-
             'fullname' => $request->fullname,
-
             'email' => $request->email,
-
             'password' => Hash::make($tempPassword),
-
             'role' => 'vet',
-
         ]);
+
+        // STORE IMAGE
+        $imagePath = $request
+            ->file('image')
+            ->store('veterinarians', 'public');
 
         // CREATE VET
         $vet = Vet::create([
-
             'user_id' => $user->id,
-
             'license_number' => $request->license_number,
-
             'hire_date' => $request->hire_date,
-
             'status' => 'available',
-
+            'image' => $imagePath,
         ]);
 
-        // ARRAY FOR ALL SPECIALIZATION IDS
+        // SPECIALIZATION IDS
         $specializationIds = [];
 
         // EXISTING SPECIALIZATIONS
         if ($request->specializations) {
-
             $specializationIds = $request->specializations;
-
         }
 
         // NEW SPECIALIZATIONS
@@ -282,27 +265,15 @@ class AdminController extends Controller
             $newSpecializations = explode(',', $request->new_specializations);
 
             foreach ($newSpecializations as $specializationName) {
-
                 $specializationName = trim($specializationName);
-
                 if ($specializationName != '') {
-
-                    // CHECK IF EXISTS
                     $specialization = Specialization::firstOrCreate([
-
                         'specialization_name' => $specializationName
-
                     ]);
-
                     $specializationIds[] = $specialization->id;
-
                 }
-
             }
-
         }
-
-        // ATTACH SPECIALIZATIONS
         $vet->specializations()->sync($specializationIds);
 
         // SEND EMAIL
@@ -311,11 +282,8 @@ class AdminController extends Controller
         );
 
         return response()->json([
-
             'status' => 1,
-
-            'message' => 'Veterinarian created successfully.'
-
+            'message' => 'Veterinarian created successfully.',
         ]);
     }
 
@@ -350,9 +318,9 @@ class AdminController extends Controller
 
         $vet = Vet::with(['user', 'specializations'])
             ->findOrFail($id);
+        $vet->image = asset('storage/' . $vet->image);
 
         return response()->json($vet);
 
     }
-
 }

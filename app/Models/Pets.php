@@ -13,11 +13,13 @@ class Pets extends Model
 
     protected $fillable = [
         'pet_name',
-        'age',
+        'age_type',
         'gender',
-        'species_id',
         'breed_id',
         'user_id',
+        'age',
+        'species_id',
+        'pet_image',
     ];
 
     public function user()
@@ -25,13 +27,13 @@ class Pets extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function species()
-    {
-        return $this->belongsTo(Species::class);
-    }
-
     public function breed()
     {
-        return $this->belongsTo(Breeds::class);
+        return $this->belongsTo(Breeds::class, 'breed_id');
+    }
+
+    public function species()
+    {
+        return $this->belongsTo(Species::class, 'species_id');
     }
 }

@@ -19,17 +19,6 @@ class UserController extends Controller
         return view('user.settings');
     }
 
-    public function petList()
-    {
-        $species = Species::all();
-        $breeds = Breeds::all();
-
-        $pets = auth()->user()->pets()->latest()->paginate(6);
-
-        return view('user.pets', compact('pets', 'species', 'breeds'));
-    }
-
-
     public function updateUser(Request $request)
     {
         $user = auth()->user();
@@ -110,11 +99,16 @@ class UserController extends Controller
     public function createPet(Request $request)
     {
         $request->validate([
+
             'pet_name' => 'required|string|max:255',
             'species_name' => 'required|string|max:255',
             'breed_name' => 'required|string|max:255',
             'gender' => 'required|string|max:50',
             'age' => 'required|integer|min:0',
+            'age_type' => 'required|in:months,years',
+
+            'pet_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
         ]);
 
         // CHECK DUPLICATE PET
@@ -141,20 +135,52 @@ class UserController extends Controller
             'species_id' => $species->id
         ]);
 
+        // IMAGE UPLOAD
+        $imageName = null;
+
+        if ($request->hasFile('pet_image')) {
+            $image = $request->file('pet_image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('pet_images'), $imageName);
+        }
+
         // CREATE PET
         $pet = Pets::create([
+
             'pet_name' => $request->pet_name,
             'species_id' => $species->id,
             'breed_id' => $breed->id,
             'gender' => $request->gender,
             'age' => $request->age,
+            'age_type' => $request->age_type,
+            'pet_image' => $imageName,
             'user_id' => auth()->id(),
+
         ]);
 
         return response()->json([
             'status' => 1,
             'message' => 'Pet added successfully!',
             'pet' => $pet
+        ]);
+    }
+    public function petList()
+    {
+        $species = Species::all();
+        $breeds = Breeds::all();
+
+        $pets = auth()->user()->pets()->latest()->paginate(6);
+
+        return view('user.pets', compact('pets', 'species', 'breeds'));
+    }
+
+    public function deletePet($id)
+    {
+        Pets::findOrFail($id)->delete();
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Pet deleted successfully'
         ]);
     }
 }
