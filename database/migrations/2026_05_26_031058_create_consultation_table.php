@@ -20,12 +20,9 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('vet_id');
             $table->unsignedBigInteger('appointment_id');
-            $table->unsignedBigInteger('service_id');
 
             $table->foreign('vet_id')->references('id')->on('veterinarian')->onDelete('cascade');
             $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
-            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
-
 
         });
     }

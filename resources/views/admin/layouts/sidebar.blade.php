@@ -7,6 +7,9 @@
 
     <ul class="menu">
 
+        <!-- MAIN MENU -->
+        <li class="menu-link menu-title">MAIN MENU</li>
+
         <!-- DASHBOARD -->
         <li>
             <a href="{{ route('admin.dashboard') }}"
@@ -51,7 +54,7 @@
 
         <!-- SERVICE -->
         <li>
-            <a href="#" class="menu-link">
+            <a href="{{ route('admin.services') }}" class="menu-link">
                 <i class="fa-solid fa-kit-medical"></i>
                 <span>Services</span>
             </a>

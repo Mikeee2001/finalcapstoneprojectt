@@ -24,6 +24,9 @@
     <link rel="stylesheet" href="{{ asset('css/vet-sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/pet-card.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/services.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin-header.css') }}">
+
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -42,18 +45,18 @@
 
         .layout {
             display: flex;
-            min-height: 100vh;
+            max-height: 100%;
         }
 
         /* SIDEBAR */
         .sidebar {
-            width: 210px;
+            width: 220px;
             background: linear-gradient(180deg, #1e3a8a, #2563eb);
             color: white;
-            padding: 20px;
+            padding: 30px;
             transition: 0.3s;
             position: fixed;
-            height: 100vh;
+            height: 100%;
             overflow: hidden;
         }
 
@@ -74,25 +77,6 @@
             list-style: none;
         }
 
-        .menu li {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 14px;
-            margin-bottom: 10px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .menu li:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .menu li i {
-            min-width: 20px;
-            text-align: center;
-        }
 
         .layout.collapsed .sidebar span {
             display: none;
@@ -223,6 +207,7 @@ rel="stylesheet">
 
 <!-- SWEETALERT -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script>
     function toggleSidebar() {

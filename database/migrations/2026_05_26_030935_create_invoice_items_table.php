@@ -14,15 +14,27 @@ return new class extends Migration {
             $table->id();
             $table->string('source_type');
             $table->string('item_name');
-            $table->integer('quantity');
-            $table->decimal('unit_price', 10, 2);
-            $table->decimal('subtotal', 10, 2);
-            $table->timestamps();
 
-            $table->unsignedBigInteger('payment_id');
-            $table->unsignedBigInteger('appointment_id');
-            $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
-            $table->foreign('payment_id')->references('id')->on('payments')->onDelete('cascade');
+            $table->integer('quantity');
+
+            $table->decimal('unit_price', 10, 2);
+
+            $table->decimal('subtotal', 10, 2);
+
+            $table->foreignId('service_id')
+                ->nullable()
+                ->constrained('services')
+                ->nullOnDelete();
+
+            $table->foreignId('invoice_id')
+                ->constrained('invoices')
+                ->cascadeOnDelete();
+
+            $table->foreignId('appointment_id')
+                ->constrained('appointments')
+                ->cascadeOnDelete();
+
+            $table->timestamps();
 
         });
     }

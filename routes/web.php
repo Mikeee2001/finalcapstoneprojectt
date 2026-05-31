@@ -34,6 +34,11 @@ Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function 
     Route::delete('/vets/delete/{id}', [AdminController::class, 'deleteVet']);
     Route::get('/vets/show/{id}', [AdminController::class, 'showVet']);
     Route::post('/vets/update-status',[AdminController::class, 'toggleVetStatus'])->name('admin.vets.updateStatus');
+    Route::put('/vets/update/{id}', [AdminController::class, 'updateVet'])->name('admin.vets.update');
+    Route::get('/services', [AdminController::class, 'categories'])->name('admin.services');
+    Route::post('/services/add', [AdminController::class, 'addService'])->name('admin.add.services');
+    Route::post('/service/toggle-status/{id}', [AdminController::class, 'toggleServiceStatus'])->name('admin.toggle.service.status');
+
 });
 
 Route::prefix('vet')->middleware(['auth', 'checkRole:vet'])->group(function () {
@@ -52,6 +57,8 @@ Route::prefix('user')->middleware(['auth', 'checkRole:user'])->group(function ()
     Route::get('/pets', [UserController::class, 'petList'])->name('user.pets');
     Route::post('/pets/add', [UserController::class, 'createPet'])->name('user.pets.add');
     Route::delete('/pets/delete/{id}', [UserController::class, 'deletePet'])->name('user.pets.delete');
+    Route::get('/appointments', [UserController::class, 'getAppointmentForm'])->name('user.add.appointment');
+    Route::post('/appointment-store', [UserController::class, 'storeAppointment'])->name('user.appointment.store');
 });
 
 

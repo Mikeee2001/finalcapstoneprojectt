@@ -5,7 +5,7 @@
     </button>
 
     <div>
-        <strong>{{ Auth::user()->fullname ?? 'vet' }}</strong>
+        <strong>{{ Auth::user()->fullname ?? 'staff' }}</strong>
     </div>
 
 </header>

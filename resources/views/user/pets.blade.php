@@ -190,6 +190,7 @@
                                     </label>
 
                                     <input type="file" name="pet_image" class="form-control" accept="image/*">
+                                    <span class="text-muted fw-normal">(optional)</span>
 
                                 </div>
 
@@ -464,6 +465,9 @@
 
                         // CLOSE MODAL
                         $('#createPetModal').modal('hide');
+                        $('.modal-backdrop').remove();
+                        $('body').removeClass('modal-open');
+                        $('body').css('overflow', '');
 
                         // RESET FORM
                         form[0].reset();

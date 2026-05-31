@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Mail\VetAccountMail;
+use App\Models\Categories;
+use App\Models\Services;
 use App\Models\Specialization;
 use App\Models\User;
 use App\Models\Vet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+
 
 
 class AdminController extends Controller
@@ -31,9 +35,15 @@ class AdminController extends Controller
         return view('admin.setting');
     }
 
+    public function services()
+    {
+        return view('admin.service');
+    }
+
+
     public function userList()
     {
-        $users = User::whereIn('role', ['admin', 'user'])->orderBy('created_at', 'desc')
+        $users = User::whereIn('role', ['admin', 'user','staff'])->orderBy('created_at', 'desc')
             ->simplePaginate(10);
         $specializations = Specialization::all();
         return view('admin.users', compact('users', 'specializations'));
@@ -64,7 +74,7 @@ class AdminController extends Controller
     // ==========================
     public function fetchVets()
     {
-        $vets = Vet::with(['user', 'specializations'])->get();
+        $vets = Vet::with(['user', 'specializations'])->latest()->get();
 
         $formatted = $vets->map(function ($vet) {
 
@@ -90,7 +100,13 @@ class AdminController extends Controller
     }
     public function fetch()
     {
-        return response()->json(User::latest()->get());
+        $users = User::whereIn('role', [
+            'admin',
+            'user',
+            'staff'
+        ])->latest()->get();
+
+        return response()->json($users);
     }
 
     // 🗑 DELETE USER
@@ -308,11 +324,9 @@ class AdminController extends Controller
 
     }
 
-
     // ==========================
     // SHOW VET
     // ==========================
-
     public function showVet($id)
     {
 
@@ -323,4 +337,135 @@ class AdminController extends Controller
         return response()->json($vet);
 
     }
+
+
+    public function updateVet(Request $request, $id)
+    {
+        $vet = Vet::findOrFail($id);
+
+        if ($request->filled('fullname')) {
+            $vet->user->fullname = $request->fullname;
+        }
+
+        if ($request->filled('email')) {
+            $vet->user->email = $request->email;
+        }
+
+        $vet->user->save();
+
+        if ($request->filled('license_number')) {
+            $vet->license_number = $request->license_number;
+        }
+
+        if ($request->filled('hire_date')) {
+            $vet->hire_date = $request->hire_date;
+        }
+
+        if ($request->filled('status')) {
+            $vet->status = $request->status;
+        }
+
+        if ($request->hasFile('image')) {
+
+            if ($vet->image && Storage::disk('public')->exists($vet->image)) {
+                Storage::disk('public')->delete($vet->image);
+            }
+
+            $vet->image = $request->file('image')
+                ->store('veterinarians', 'public');
+        }
+
+        $vet->save();
+
+        return response()->json([
+            'message' => 'Veterinarian updated successfully.'
+        ]);
+    }
+
+    public function categories()
+    {
+        $services = Services::with('category')
+            ->paginate(10);
+
+        $categories = Categories::all();
+
+        return view('admin.service', compact('services', 'categories'));
+    }
+
+
+    public function addService(Request $request)
+    {
+        $request->validate([
+            'service_name' => 'required|string|max:255',
+            'service_description' => 'nullable|string',
+            'price' => 'required|numeric',
+
+            'category_id' => 'required',
+
+            'new_category' => 'nullable|string|max:255',
+
+            'status' => 'required|in:active,nactive',
+        ]);
+
+        // =========================
+        // CREATE OR GET CATEGORY
+        // =========================
+        if ($request->category_id === 'new') {
+
+            $newName = trim($request->new_category);
+
+            if (!$newName) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'New category name is required.'
+                ], 422);
+            }
+
+            // CHECK FOR DUPLICATE (case-insensitive)
+            $category = Categories::whereRaw('LOWER(category_name) = ?', [strtolower($newName)])
+                ->first();
+
+            // IF EXISTS → reuse it
+            if (!$category) {
+                $category = Categories::create([
+                    'category_name' => $newName
+                ]);
+            }
+
+            $category_id = $category->id;
+
+        } else {
+            $category_id = $request->category_id;
+        }
+        // =========================
+        // CREATE SERVICE
+        // =========================
+        Services::create([
+            'service_name' => $request->service_name,
+            'service_description' => $request->service_description,
+            'price' => $request->price,
+            'category_id' => $category_id,
+            'status' => $request->status,
+        ]);
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Service added successfully.'
+        ]);
+    }
+
+    public function toggleServiceStatus($id)
+    {
+        $service = Services::findOrFail($id);
+
+        // TOGGLE STATUS
+        $service->status = $service->status === 'active' ? 'inactive' : 'active';
+        $service->save();
+
+        return response()->json([
+            'success' => true,
+            'status' => $service->status
+        ]);
+    }
+
 }

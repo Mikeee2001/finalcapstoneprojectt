@@ -10,8 +10,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
 
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700"
-        rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
 
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -56,15 +55,27 @@
 
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
-            <div>
-                <a href="{{ route('welcome') }}" class="flex items-center gap-2">
-                    <h1 class="text-2xl font-bold text-blue-700">
+            <!-- LOGO -->
+            <a href="{{ route('welcome') }}" class="flex items-center gap-2">
+                <h1 class="text-2xl font-bold text-blue-700">
                     VetCare System
                 </h1>
-                </a>
-            </div>
+            </a>
 
-            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+            <!-- MENU -->
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+
+                @if ($services->isNotEmpty())
+                    <a href="#services" class="hover:text-blue-600 transition">
+                        Services
+                    </a>
+                @endif
+
+                @if ($vet->isNotEmpty())
+                    <a href="#veterinarians" class="hover:text-blue-600 transition">
+                        Veterinarians
+                    </a>
+                @endif
 
                 <a href="#features" class="hover:text-blue-600 transition">
                     Features
@@ -93,7 +104,6 @@
 
     </nav>
 
-
     <!-- Hero Section -->
     <section class="hero-bg min-h-screen flex items-center relative overflow-hidden">
 
@@ -110,7 +120,8 @@
                 <!-- Left -->
                 <div class="fade-up">
 
-                    <span class="inline-block px-5 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold mb-6">
+                    <span
+                        class="inline-block px-5 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold mb-6">
                         Veterinary Clinic Management System
                     </span>
 
@@ -145,10 +156,8 @@
 
                     <div class="relative">
 
-                        <img
-                            src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=1200&auto=format&fit=crop"
-                            alt="Veterinary Clinic"
-                            class="rounded-[32px] shadow-2xl w-full h-[550px] object-cover">
+                        <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=1200&auto=format&fit=crop"
+                            alt="Veterinary Clinic" class="rounded-[32px] shadow-2xl w-full h-[550px] object-cover">
 
                         <div class="absolute bottom-6 left-6 right-6 glass rounded-3xl p-6 shadow-xl">
 
@@ -188,6 +197,78 @@
 
     </section>
 
+    @if ($services->isNotEmpty())
+
+        <!-- Services Section Here -->
+        <section id="services" class="py-28 bg-gradient-to-b from-white to-gray-50">
+
+            <div class="max-w-7xl mx-auto px-6">
+
+                <div class="text-center mb-16 fade-up">
+
+                    <h2 class="text-5xl font-bold mb-5">
+                        Veterinary Services
+                    </h2>
+
+                    <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                        Explore our professional veterinary services and transparent pricing.
+                    </p>
+
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    @forelse($services as $service)
+                        <div
+                            class="fade-up bg-white rounded-[30px] shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transition duration-500 hover:-translate-y-2">
+
+                            <div class="p-8">
+
+                                @if ($service->category)
+                                    <span
+                                        class="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full mb-4">
+                                        {{ $service->category->category_name }}
+                                    </span>
+                                @endif
+
+                                <h3 class="text-2xl font-bold mb-4">
+                                    {{ $service->service_name }}
+                                </h3>
+
+                                <p class="text-gray-600 leading-relaxed mb-6">
+                                    {{ $service->service_description }}
+                                </p>
+
+                                <div class="border-t pt-4 flex justify-between items-center">
+
+                                    <span class="text-gray-500">
+                                        Service Fee
+                                    </span>
+
+                                    <span class="text-2xl font-bold text-blue-600">
+                                        ₱{{ number_format($service->price, 2) }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    @empty
+
+                        <div class="col-span-3 text-center text-gray-500">
+                            No services available.
+                        </div>
+                    @endforelse
+
+                </div>
+
+            </div>
+
+        </section>
+    @endif
+
 
     <!-- Features -->
     <section id="features" class="py-28">
@@ -211,31 +292,28 @@
                     [
                         'Pet & Owner Management',
                         'Manage pets, breeds, species, and owner information securely.',
-                        'https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1200&auto=format&fit=crop'
+                        'https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1200&auto=format&fit=crop',
                     ],
                     [
                         'Appointment Scheduling',
                         'Track appointments and veterinarian availability.',
-                        'https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?q=80&w=1200&auto=format&fit=crop'
+                        'https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?q=80&w=1200&auto=format&fit=crop',
                     ],
                     [
                         'Medical Consultation',
                         'Store diagnosis, findings, symptoms, and treatments.',
-                        'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop'
-                    ]
+                        'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop',
+                    ],
                 ];
             @endphp
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                @foreach($features as $feature)
+                @foreach ($features as $feature)
+                    <div
+                        class="fade-up bg-white border border-gray-100 rounded-[30px] overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 hover:-translate-y-2">
 
-                    <div class="fade-up bg-white border border-gray-100 rounded-[30px] overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 hover:-translate-y-2">
-
-                        <img
-                            src="{{ $feature[2] }}"
-                            class="w-full h-56 object-cover"
-                            alt="Feature Image">
+                        <img src="{{ $feature[2] }}" class="w-full h-56 object-cover" alt="Feature Image">
 
                         <div class="p-8">
 
@@ -250,7 +328,6 @@
                         </div>
 
                     </div>
-
                 @endforeach
 
             </div>
@@ -285,17 +362,18 @@
                     'Vet Consultation',
                     'Prescription & Lab Tests',
                     'Invoice Generation',
-                    'Payment Processing'
+                    'Payment Processing',
                 ];
             @endphp
 
             <div class="grid md:grid-cols-5 gap-6">
 
-                @foreach($steps as $index => $step)
+                @foreach ($steps as $index => $step)
+                    <div
+                        class="fade-up bg-white/10 border border-white/10 backdrop-blur-xl rounded-3xl p-8 text-center hover:bg-white/20 transition">
 
-                    <div class="fade-up bg-white/10 border border-white/10 backdrop-blur-xl rounded-3xl p-8 text-center hover:bg-white/20 transition">
-
-                        <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-600 flex items-center justify-center text-2xl font-bold shadow-lg">
+                        <div
+                            class="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-600 flex items-center justify-center text-2xl font-bold shadow-lg">
                             {{ $index + 1 }}
                         </div>
 
@@ -304,7 +382,6 @@
                         </h3>
 
                     </div>
-
                 @endforeach
 
             </div>
@@ -333,16 +410,13 @@
 
             <div class="grid md:grid-cols-3 gap-8">
 
-                <img
-                    src="https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1200&auto=format&fit=crop"
+                <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1200&auto=format&fit=crop"
                     class="rounded-[30px] shadow-xl h-80 w-full object-cover hover:scale-105 transition duration-500">
 
-                <img
-                    src="https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?q=80&w=1200&auto=format&fit=crop"
+                <img src="https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?q=80&w=1200&auto=format&fit=crop"
                     class="rounded-[30px] shadow-xl h-80 w-full object-cover hover:scale-105 transition duration-500">
 
-                <img
-                    src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop"
+                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop"
                     class="rounded-[30px] shadow-xl h-80 w-full object-cover hover:scale-105 transition duration-500">
 
             </div>
@@ -370,15 +444,16 @@
                     </p>
 
                     <p class="text-lg text-gray-600 leading-relaxed">
-                        Track consultations, prescriptions, inventory, invoices, and payments while improving patient care.
+                        Track consultations, prescriptions, inventory, invoices, and payments while improving
+                        patient
+                        care.
                     </p>
 
                 </div>
 
                 <div class="fade-up">
 
-                    <img
-                        src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?q=80&w=1200&auto=format&fit=crop"
+                    <img src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?q=80&w=1200&auto=format&fit=crop"
                         class="rounded-[40px] shadow-2xl w-full h-[500px] object-cover">
 
                 </div>

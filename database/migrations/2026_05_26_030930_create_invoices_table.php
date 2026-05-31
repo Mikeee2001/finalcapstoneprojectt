@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->string('invoice_number')->unique();
             // totals
@@ -24,6 +24,9 @@ return new class extends Migration {
                 'unpaid',
                 'partially_paid'
             ])->default('unpaid');
+
+            $table->unsignedBigInteger('appointment_id');
+            $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
         });
     }
 
@@ -32,6 +35,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('invoices');
     }
 };

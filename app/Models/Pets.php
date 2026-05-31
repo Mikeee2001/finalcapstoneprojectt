@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Appointments;
 use App\Models\Breeds;
 use App\Models\Species;
 use App\Models\User;
@@ -35,5 +36,10 @@ class Pets extends Model
     public function species()
     {
         return $this->belongsTo(Species::class, 'species_id');
+    }
+
+    public function appoinments()
+    {
+        return $this->hasMany(Appointments::class, 'pet_id');
     }
 }

@@ -118,14 +118,14 @@
     </div>
 
     <!-- CREATE VET MODAL -->
-    <div class="modal fade" id="createVetModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="createVetModal" tabindex="-1">
 
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
 
             <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 
                 <!-- HEADER -->
-                <div class="modal-header bg-success text-white border-0 py-3">
+                <div class="modal-header bg-success text-white">
 
                     <h5 class="modal-title fw-bold">
                         <i class="fa-solid fa-user-doctor me-2"></i>
@@ -138,170 +138,126 @@
                 </div>
 
                 <!-- BODY -->
-                <div class="modal-body bg-light p-3">
+                <div class="modal-body p-3 bg-light">
 
                     <form id="createVetForm" enctype="multipart/form-data">
 
                         @csrf
 
-                        <div class="row g-3">
+                        <div class="row">
 
-                            <!-- LEFT SIDE -->
-                            <div class="col-lg-4 text-center">
+                            <!-- PHOTO COLUMN -->
+                            <div class="col-md-3">
 
-                                <div class="bg-white rounded-4 shadow-sm p-3 h-100">
+                                <div class="bg-white p-3 rounded-4 shadow-sm text-center">
 
-                                    <label class="fw-bold mb-3 d-block">
+                                    <label class="fw-bold mb-2">
                                         Veterinarian Photo
                                     </label>
 
-                                    <!-- IMAGE PREVIEW -->
-                                    <img id="previewImage" src="https://via.placeholder.com/200x200?text=Vet"
-                                        class="rounded-4 border shadow-sm mb-3"
+                                    <img id="previewImage" src="https://via.placeholder.com/120x120?text=Vet"
+                                        class="rounded-3 border mb-3"
                                         style="
-                                        width: 200px;
-                                        height: 200px;
-                                        object-fit: cover;
+                                        width:120px;
+                                        height:120px;
+                                        object-fit:cover;
                                     ">
 
-                                    <!-- FILE INPUT -->
-                                    <input type="file" name="image" id="image" class="form-control rounded-pill">
+                                    <input type="file" name="image" id="image" class="form-control">
 
-                                    <small class="text-muted d-block mt-2">
-                                        JPG, PNG, GIF (Max 2MB)
+                                    <small class="text-muted">
+                                        JPG, PNG, GIF
                                     </small>
-
-                                    <!-- SPECIALIZATIONS -->
-                                    <div class="mt-4 text-start">
-
-                                        <label class="fw-bold mb-2">
-                                            Select Specializations
-                                        </label>
-
-                                        <<select name="specializations[]" id="specializations" class="form-select rounded-4"
-                                            multiple size="5">
-
-                                            @foreach ($specializations as $specialization)
-                                                <option value="{{ $specialization->id }}">
-
-                                                    {{ $specialization->specialization_name }}
-
-                                                </option>
-                                            @endforeach
-
-                                            </select>
-
-                                            <small class="text-muted">
-                                                Hold CTRL to select multiple.
-                                            </small>
-
-                                    </div>
 
                                 </div>
 
                             </div>
 
-                            <!-- RIGHT SIDE -->
-                            <div class="col-lg-8">
+                            <!-- FORM COLUMN -->
+                            <div class="col-md-9">
 
-                                <div class="bg-white rounded-4 shadow-sm p-4 h-100">
+                                <div class="bg-white p-4 rounded-4 shadow-sm">
 
-                                    <div class="row g-3">
+                                    <div class="row">
 
                                         <!-- FULLNAME -->
-                                        <div class="col-md-6">
+                                        <div class="col-md-4 mb-3">
 
-                                            <label class="fw-bold mb-2">
+                                            <label class="fw-bold">
                                                 Fullname
                                             </label>
 
-                                            <div class="input-group">
-
-                                                <span
-                                                    class="input-group-text bg-success text-white border-0 rounded-start-pill">
-                                                    <i class="fa-solid fa-user"></i>
-                                                </span>
-
-                                                <input type="text" name="fullname"
-                                                    class="form-control rounded-end-pill py-2" placeholder="Enter fullname">
-
-                                            </div>
+                                            <input type="text" name="fullname" class="form-control"
+                                                placeholder="Enter fullname">
 
                                         </div>
 
                                         <!-- EMAIL -->
-                                        <div class="col-md-6">
+                                        <div class="col-md-4 mb-3">
 
-                                            <label class="fw-bold mb-2">
-                                                Email Address
+                                            <label class="fw-bold">
+                                                Email
                                             </label>
 
-                                            <div class="input-group">
-
-                                                <span
-                                                    class="input-group-text bg-success text-white border-0 rounded-start-pill">
-                                                    <i class="fa-solid fa-envelope"></i>
-                                                </span>
-
-                                                <input type="email" name="email"
-                                                    class="form-control rounded-end-pill py-2" placeholder="Enter email">
-
-                                            </div>
+                                            <input type="email" name="email" class="form-control"
+                                                placeholder="Enter email">
 
                                         </div>
 
                                         <!-- LICENSE -->
-                                        <div class="col-md-6">
+                                        <div class="col-md-4 mb-3">
 
-                                            <label class="fw-bold mb-2">
+                                            <label class="fw-bold">
                                                 License Number
                                             </label>
 
-                                            <div class="input-group">
-
-                                                <span
-                                                    class="input-group-text bg-success text-white border-0 rounded-start-pill">
-                                                    <i class="fa-solid fa-id-card"></i>
-                                                </span>
-
-                                                <input type="text" name="license_number"
-                                                    class="form-control rounded-end-pill py-2"
-                                                    placeholder="Enter license number">
-
-                                            </div>
+                                            <input type="text" name="license_number" class="form-control"
+                                                placeholder="License Number">
 
                                         </div>
 
                                         <!-- HIRE DATE -->
-                                        <div class="col-md-6">
+                                        <div class="col-md-4 mb-3">
 
-                                            <label class="fw-bold mb-2">
+                                            <label class="fw-bold">
                                                 Hire Date
                                             </label>
 
-                                            <div class="input-group">
+                                            <input type="date" name="hire_date" class="form-control">
 
-                                                <span
-                                                    class="input-group-text bg-success text-white border-0 rounded-start-pill">
-                                                    <i class="fa-solid fa-calendar"></i>
-                                                </span>
+                                        </div>
 
-                                                <input type="date" name="hire_date"
-                                                    class="form-control rounded-end-pill py-2">
+                                        <!-- SPECIALIZATIONS -->
+                                        <div class="col-md-8 mb-3">
 
-                                            </div>
+                                            <label class="fw-bold">
+                                                Select Specializations
+                                            </label>
+
+                                            <select name="specializations[]" id="specializations" class="form-select"
+                                                multiple size="3">
+
+                                                @foreach ($specializations as $specialization)
+                                                    <option value="{{ $specialization->id }}">
+                                                        {{ $specialization->specialization_name }}
+                                                    </option>
+                                                @endforeach
+
+                                            </select>
+                                            <small class="text-muted">
+                                                Hold CTRL to select multiple.
+                                            </small>
 
                                         </div>
 
                                         <!-- NEW SPECIALIZATION -->
-                                        <div class="col-12 mt-3">
+                                        <div class="col-12">
 
-                                            <label class="fw-bold mb-2">
+                                            <label class="fw-bold">
                                                 Add New Specialization
                                             </label>
 
-                                            <input type="text" name="new_specializations"
-                                                class="form-control rounded-pill py-2"
+                                            <input type="text" name="new_specializations" class="form-control"
                                                 placeholder="Example: Surgery, Cardiology, Dentistry">
 
                                             <small class="text-muted">
@@ -319,9 +275,9 @@
                         </div>
 
                         <!-- BUTTON -->
-                        <div class="mt-4">
+                        <div class="mt-3">
 
-                            <button type="submit" class="btn btn-success w-100 rounded-pill py-3 fw-bold shadow-sm">
+                            <button type="submit" class="btn btn-success w-100 py-2 fw-bold">
 
                                 <i class="fas fa-save me-2"></i>
                                 Save Veterinarian
@@ -340,7 +296,7 @@
 
     </div>
 
-    <!-- CREATE MODAL -->
+    <!-- CREATE USER MODAL -->
     <div class="modal fade" id="createModal">
 
         <div class="modal-dialog modal-dialog-centered">
@@ -354,8 +310,7 @@
                         Create New User
                     </h5>
 
-                    <button class="close text-white" data-dismiss="modal">
-                        <span>&times;</span>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
                     </button>
 
                 </div>
@@ -407,6 +362,7 @@
                                 <option value="">Select Role</option>
                                 <option value="admin">Admin</option>
                                 <option value="user">User</option>
+                                <option value="staff">Staff</option>
                             </select>
                         </div>
 
@@ -426,6 +382,106 @@
 
         </div>
 
+    </div>
+
+    <!-- EDIT VET MODAL -->
+    <div class="modal fade" id="editVetModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Veterinarian</h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+                </div>
+
+                <form id="updateVetForm" enctype="multipart/form-data">
+
+                    @csrf
+
+                    <input type="hidden" id="vet_id" name="vet_id">
+
+                    <div class="modal-body">
+
+                        <div class="row">
+
+                            <div class="col-md-4 text-center">
+
+                                <img id="editPreviewImage" src="" class="img-fluid rounded-circle border mb-3"
+                                    style="width:150px;height:150px;object-fit:cover;">
+
+                                <input type="file" name="image" id="editImage" class="form-control">
+
+                            </div>
+
+                            <div class="col-md-8">
+
+                                <div class="mb-3">
+                                    <label>Full Name</label>
+
+                                    <input type="text" name="fullname" id="fullname" class="form-control">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Email</label>
+
+                                    <input type="email" name="email" id="email" class="form-control">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>License Number</label>
+
+                                    <input type="text" name="license_number" id="license_number"
+                                        class="form-control">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Hire Date</label>
+
+                                    <input type="date" name="hire_date" id="hire_date" class="form-control">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Status</label>
+
+                                    <select name="status" id="status" class="form-control">
+
+                                        <option value="available">
+                                            Available
+                                        </option>
+
+                                        <option value="unavailable">
+                                            Unavailable
+                                        </option>
+
+                                    </select>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+
+                        <button type="submit" class="btn btn-primary">
+                            Update Vet
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
     </div>
 
 
@@ -520,6 +576,8 @@
                             user.role == 'admin' ?
                             `<span class="badge badge-primary px-3 py-2 rounded-pill">Admin</span>` :
                             `<span class="badge badge-secondary px-3 py-2 rounded-pill">User</span>`;
+                        `<span class="badge badge-success px-3 py-2 rounded-pill">Staff</span>`;
+
 
                         rows += `
                     <tr>
@@ -790,6 +848,11 @@
                                     </td>
 
                                         <td>
+
+                                            <button class="btn btn-warning btn-sm rounded-pill px-3 vetEditBtn"
+                                                    data-id="${vet.id}">
+                                                Edit
+                                            </button>
 
                                             <button class="btn btn-info btn-sm rounded-pill px-3 vetViewBtn"
                                                     data-id="${vet.id}">
@@ -1089,11 +1152,11 @@
                                 ${
                                     vet.image
                                     ? `<img src="${vet.image}"
-                                                    alt="Vet Image"
-                                                    class="rounded-4 shadow"
-                                                    width="140"
-                                                    height="140"
-                                                    style="object-fit: cover;">`
+                                                                                                                alt="Vet Image"
+                                                                                                                class="rounded-4 shadow"
+                                                                                                                width="140"
+                                                                                                                height="140"
+                                                                                                                style="object-fit: cover;">`
                                     : 'No image available'
                                 }
 
@@ -1137,6 +1200,149 @@
                             icon: "error",
                             title: "Error",
                             text: "Failed to load veterinarian details."
+                        });
+
+                    }
+
+                });
+
+            });
+
+            // ==========================
+            // EDIT VET
+            // ==========================
+            $(document).on("click", ".vetEditBtn", function() {
+
+                let id = $(this).data("id");
+
+                $.ajax({
+
+                    url: "/admin/vets/show/" + id,
+                    type: "GET",
+
+                    success: function(vet) {
+
+                        $("#vet_id").val(vet.id);
+
+                        $("#fullname").val(vet.user.fullname);
+
+                        $("#email").val(vet.user.email);
+
+                        $("#license_number").val(vet.license_number);
+
+                        $("#hire_date").val(vet.hire_date);
+
+                        $("#status").val(vet.status);
+
+                        $("#editPreviewImage").attr(
+                            "src",
+                            vet.image ? vet.image :
+                            "https://via.placeholder.com/150x150?text=Vet"
+                        );
+
+                        $("#editVetModal").modal("show");
+                    }
+
+                });
+
+            });
+
+            // ==========================
+            // EDIT IMAGE PREVIEW
+            // ==========================
+            $("#editImage").change(function() {
+
+                let reader = new FileReader();
+
+                reader.onload = function(e) {
+
+                    $("#editPreviewImage").attr(
+                        "src",
+                        e.target.result
+                    );
+
+                };
+
+                reader.readAsDataURL(this.files[0]);
+
+            });
+
+            // ==========================
+            // UPDATE VET
+            // ==========================
+            $("#updateVetForm").submit(function(e) {
+
+                e.preventDefault();
+
+                let id = $("#vet_id").val();
+
+                let formData = new FormData(this);
+
+                formData.append("_method", "PUT"); // Spoofing PUT method for Laravel
+
+                $.ajax({
+
+                    url: "/admin/vets/update/" + id,
+
+                    type: "POST",
+
+                    data: formData,
+
+                    processData: false,
+                    contentType: false,
+
+                    beforeSend: function() {
+
+                        $("#updateVetForm button[type='submit']")
+                            .prop("disabled", true)
+                            .html("Updating...");
+
+                    },
+
+                    success: function(res) {
+
+                        $("#updateVetForm button[type='submit']")
+                            .prop("disabled", false)
+                            .html("Update Vet");
+
+                        $("#editVetModal").modal("hide");
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success",
+                            text: res.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+
+                        loadVets();
+
+                    },
+
+                    error: function(xhr) {
+
+                        $("#updateVetForm button[type='submit']")
+                            .prop("disabled", false)
+                            .html("Update Vet");
+
+                        let msg = "";
+
+                        if (xhr.responseJSON?.errors) {
+
+                            $.each(xhr.responseJSON.errors, function(key, value) {
+                                msg += value[0] + "<br>";
+                            });
+
+                        } else {
+
+                            msg = "Something went wrong.";
+
+                        }
+
+                        Swal.fire({
+                            icon: "error",
+                            title: "Validation Error",
+                            html: msg
                         });
 
                     }

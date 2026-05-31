@@ -2,21 +2,19 @@
 
 namespace App\Models;
 
-use App\Models\Services;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Services;
 
-class Category extends Model
+class Categories extends Model
 {
     protected $table = 'category';
 
-    protected $fillable =
-    [
+    protected $fillable = [
         'category_name',
     ];
 
     public function services()
     {
-        return $this->hasMany(Services::class);
+        return $this->hasMany(Services::class, 'category_id');
     }
-
 }

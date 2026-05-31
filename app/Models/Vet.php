@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Appointments;
 use App\Models\Specialization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -32,5 +33,10 @@ class Vet extends Model
             'veterinarian_id',
             'specialization_id'
         );
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointments::class, 'vet_id');
     }
 }

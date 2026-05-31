@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointments;
 use App\Models\Breeds;
 use App\Models\Pets;
+use App\Models\Services;
 use App\Models\Species;
+use App\Models\User;
+use App\Notifications\AppointmentNotification;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -18,6 +22,12 @@ class UserController extends Controller
     {
         return view('user.settings');
     }
+
+
+    // public function getAppointmentList()
+    // {
+    //     return view('user.appointmentList');
+    // }
 
     public function updateUser(Request $request)
     {
@@ -181,6 +191,56 @@ class UserController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Pet deleted successfully'
+        ]);
+    }
+
+    public function getAppointmentForm()
+    {
+        $pets = Pets::where('user_id', auth()->id())->get();
+
+        $services = Services::where('status', 'active')->get();
+
+        return view('user.appointment-form', [
+            'pets' => $pets,
+            'services' => $services,
+        ]);
+    }
+
+    public function storeAppointment(Request $request)
+    {
+        $validated = $request->validate([
+            'pet_id' => 'required|exists:pets,id',
+            'service_id' => 'required|exists:services,id',
+            'requested_date' => 'required|date|after_or_equal:today',
+            'requested_time' => 'required',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        $appointment = Appointments::create([
+            'pet_id' => $validated['pet_id'],
+            'service_id' => $validated['service_id'],
+            'vet_id' => null,
+            'requested_date' => $validated['requested_date'],
+            'requested_time' => $validated['requested_time'],
+            'status' => 'pending',
+            'notes' => $validated['notes'] ?? null,
+        ]);
+
+        // Notify Admins
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            $admin->notify(
+                new AppointmentNotification(
+                    'New appointment request received.'
+                )
+            );
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Appointment request submitted successfully!',
+            'appointment' => $appointment
         ]);
     }
 }

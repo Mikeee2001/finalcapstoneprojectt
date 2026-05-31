@@ -5,30 +5,30 @@
     position: fixed;
     top: 0;
     left: 0;
+
     background: linear-gradient(180deg, #1e3a8a, #2563eb);
-    padding: 18px;
     color: #fff;
+
+    padding: 15px;
+    box-sizing: border-box;
+
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-/* LOGO */
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 18px;
-    margin-bottom: 18px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.logo i {
-    font-size: 24px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
 }
 
 .logo span {
-    font-size: 20px;
-    font-weight: 700;
-    color: #fff;
+    font-size: 18px;
 }
+
+.logo i {
+    font-size: 22px;
+}
+
 
 /* MENU */
 .menu {
@@ -37,36 +37,61 @@
     margin: 0;
 }
 
-/* SMALLER GAPS */
-.menu li {
-    margin-bottom: 4px;
+/* SECTION TITLES */
+.menu-title {
+    padding: 14px 12px 6px;
+    margin-top: 8px;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    color: rgba(255, 255, 255, 0.55);
 }
 
-/* COMPACT LINKS */
+/* MENU ITEMS */
+.menu li {
+    margin-bottom: 8px;
+}
+
 .menu-link {
-    display: flex;
-    align-items: center;
+    padding: 8px 12px;
     gap: 10px;
-    padding: 9px 12px;
-    border-radius: 10px;
+}
+
+.menu li {
+    margin-bottom: 2px;
+}
+
+/* HOVER */
+.menu-link:hover {
+    background: rgba(255, 255, 255, 0.08);
     color: #fff;
     text-decoration: none;
-    transition: 0.2s ease;
-    font-size: 14px;
-    font-weight: 500;
+}
+
+/* ACTIVE */
+.menu-link.active {
+    background: rgba(255, 255, 255, 0.15);
 }
 
 /* ICONS */
 .menu-link i {
-    width: 16px;
+    width: 20px;
+    min-width: 20px;
+    text-align: center;
+    font-size: 15px;
+}
+
+/* TEXT */
+.menu-link span {
     font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
 }
 
 /* LOGOUT */
 .logout-item {
-    margin-top: 8px;
-}
-
-.logout-link {
-    background: rgba(255, 255, 255, 0.08);
+    margin-top: 30px;
 }
