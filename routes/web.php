@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VetController;
@@ -33,12 +34,12 @@ Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function 
     Route::post('/create/vet', [AdminController::class, 'createVet'])->name('admin.vet.create');
     Route::delete('/vets/delete/{id}', [AdminController::class, 'deleteVet']);
     Route::get('/vets/show/{id}', [AdminController::class, 'showVet']);
-    Route::post('/vets/update-status',[AdminController::class, 'toggleVetStatus'])->name('admin.vets.updateStatus');
+    Route::post('/vets/update-status', [AdminController::class, 'toggleVetStatus'])->name('admin.vets.updateStatus');
     Route::put('/vets/update/{id}', [AdminController::class, 'updateVet'])->name('admin.vets.update');
     Route::get('/services', [AdminController::class, 'categories'])->name('admin.services');
     Route::post('/services/add', [AdminController::class, 'addService'])->name('admin.add.services');
     Route::post('/service/toggle-status/{id}', [AdminController::class, 'toggleServiceStatus'])->name('admin.toggle.service.status');
-
+    Route::get('notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
 });
 
 Route::prefix('vet')->middleware(['auth', 'checkRole:vet'])->group(function () {
@@ -46,6 +47,8 @@ Route::prefix('vet')->middleware(['auth', 'checkRole:vet'])->group(function () {
     Route::get('/settings', [VetController::class, 'vetSettings'])->name('vet.settings');
     Route::post('/settings/update', [VetController::class, 'updateVet'])->name('vet.settings.update');
     Route::post('/settings/change-password', [VetController::class, 'updateVetPassword'])->name('vet.settings.change.password');
+    Route::get('notifications', [NotificationController::class, 'index'])->name('vet.notifications.index');
+
 
 });
 
@@ -59,6 +62,8 @@ Route::prefix('user')->middleware(['auth', 'checkRole:user'])->group(function ()
     Route::delete('/pets/delete/{id}', [UserController::class, 'deletePet'])->name('user.pets.delete');
     Route::get('/appointments', [UserController::class, 'getAppointmentForm'])->name('user.add.appointment');
     Route::post('/appointment-store', [UserController::class, 'storeAppointment'])->name('user.appointment.store');
+    Route::get('notifications', [NotificationController::class, 'index'])->name('user.notifications.index');
+
 });
 
 

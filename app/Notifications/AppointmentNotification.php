@@ -2,15 +2,18 @@
 
 namespace App\Notifications;
 
+use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
 class AppointmentNotification extends Notification
 {
-    protected $message;
+    use Queueable;
 
-    public function __construct($message)
+    protected $data;
+
+    public function __construct(array $data)
     {
-        $this->message = $message;
+        $this->data = $data;
     }
 
     public function via($notifiable)
@@ -18,10 +21,12 @@ class AppointmentNotification extends Notification
         return ['database'];
     }
 
-    public function toDatabase($notifiable)
+    public function toArray($notifiable)
     {
         return [
-            'message' => $this->message,
+            'user' => $this->data['user'] ?? '',
+            'action' => $this->data['action'] ?? '',
+            'message' => $this->data['message'] ?? '',
         ];
     }
 }

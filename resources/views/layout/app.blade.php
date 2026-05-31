@@ -25,11 +25,12 @@
     <link rel="stylesheet" href="{{ asset('css/pet-card.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
     <link rel="stylesheet" href="{{ asset('css/services.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/admin-header.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/notification.css') }}">
+
 
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
-
+@vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         * {
@@ -179,6 +180,7 @@
         </div>
     </div>
 
+
     <script src="{{ asset('js/spinner.js') }}"></script>
    <!-- JQUERY -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -216,6 +218,37 @@ rel="stylesheet">
     }
 </script>
 
-    </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
 
+        if (typeof window.Echo === 'undefined') {
+            console.error('Echo not loaded');
+            return;
+        }
+
+        window.Echo.private('notifications.{{ Auth::id() }}')
+            .listen('.notification.created', (e) => {
+
+                let badge = document.getElementById('notificationCount');
+
+                if (!badge) return;
+
+                let count = parseInt(badge.innerText || 0);
+
+                badge.innerText = count + 1;
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'info',
+                    title: e.message,
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            });
+
+    });
+</script>
+
+</body>
 </html>

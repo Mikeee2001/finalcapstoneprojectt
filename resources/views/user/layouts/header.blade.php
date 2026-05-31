@@ -1,13 +1,27 @@
 <header class="topbar">
 
     <button onclick="toggleSidebar()" class="burger">
+        <i class="fa-solid fa-bars"></i>
+    </button>
 
-    <i class="fa-solid fa-bars"></i>
+    <div class="topbar-right">
 
-</button>
+        <a href="{{ route('user.notifications.index') }}" class="position-relative notification-bell">
 
-    <div>
-        <strong>{{ Auth::user()->fullname ?? 'user' }}</strong>
+            <i class="fa-solid fa-bell"></i>
+
+            @if (auth()->user()->unreadNotifications->count() > 0)
+                <span id="notificationCount" class="badge bg-danger position-absolute top-0 start-100 translate-middle">
+
+                    {{ auth()->user()->unreadNotifications->count() }}
+
+                </span>
+            @endif
+
+        </a>
+
+        <strong>{{ Auth::user()->fullname ?? 'User' }}</strong>
+
     </div>
 
 </header>

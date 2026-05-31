@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationCreated;
 use App\Models\Appointments;
 use App\Models\Breeds;
 use App\Models\Pets;
@@ -230,8 +231,17 @@ class UserController extends Controller
         $admins = User::where('role', 'admin')->get();
 
         foreach ($admins as $admin) {
+
             $admin->notify(
-                new AppointmentNotification(
+                new AppointmentNotification([
+                    'user' => auth()->user()->fullname,
+                    'action' => 'New Appointment',
+                    'message' => auth()->user()->name . ' submitted an appointment request.'
+                ])
+            );
+            event(
+                new NotificationCreated(
+                    $admin->id,
                     'New appointment request received.'
                 )
             );
@@ -242,5 +252,15 @@ class UserController extends Controller
             'message' => 'Appointment request submitted successfully!',
             'appointment' => $appointment
         ]);
+    }
+
+    public function showAppointmentList()
+    {
+        $appointments = auth()->user()->appointments()
+            ->with(['pet', 'service', 'vet'])
+            ->latest()
+            ->get();
+
+        return view('user.appointment-list', compact('appointments'));
     }
 }
