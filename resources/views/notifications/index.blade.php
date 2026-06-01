@@ -16,7 +16,7 @@
             <!-- BODY -->
             <div class="card-body p-0">
 
-                @forelse(auth()->user()->notifications as $notification)
+                @forelse($notifications as $notification)
                     <div class="notification-item d-flex align-items-start gap-3 p-3 border-bottom">
 
                         <!-- ICON -->
@@ -28,6 +28,7 @@
                         <div class="flex-grow-1">
 
                             <div class="d-flex justify-content-between align-items-center">
+
                                 <div class="notification-title fw-semibold text-dark">
                                     {{ $notification->data['action'] ?? 'Notification' }}
                                 </div>
@@ -35,10 +36,17 @@
                                 <small class="text-muted">
                                     {{ $notification->created_at->diffForHumans() }}
                                 </small>
+
                             </div>
 
                             <div class="notification-message text-muted mt-1">
+
+                                <strong>
+                                    {{ $notification->data['user'] ?? auth()->user()->fullname }}
+                                </strong>
+
                                 {{ $notification->data['message'] ?? 'No message available.' }}
+
                             </div>
 
                         </div>
@@ -61,6 +69,13 @@
                     </div>
                 @endforelse
 
+            </div>
+
+            <!-- PAGINATION -->
+            <div class="card-footer bg-white border-0 py-3">
+                <div class="d-flex justify-content-center">
+                    {{ $notifications->links() }}
+                </div>
             </div>
 
         </div>

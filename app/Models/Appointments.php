@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Pets;
 use App\Models\Services;
+use App\Models\User;
 use App\Models\Vet;
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,5 +39,8 @@ class Appointments extends Model
         return $this->belongsTo(Services::class, 'service_id');
     }
 
-
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

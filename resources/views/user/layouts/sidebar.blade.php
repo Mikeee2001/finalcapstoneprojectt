@@ -24,16 +24,16 @@
         <li class="menu-title">APPOINTMENTS</li> --}}
 
         <li>
-            <a href="{{ route('user.add.appointment') }}"
-                class="menu-link {{ request()->routeIs('user.add.appointment') ? 'active' : '' }}">
+            <a href="{{ route('user.appointmentForm') }}"
+                class="menu-link {{ request()->routeIs('user.appointmentForm') ? 'active' : '' }}">
                 <i class="fa-solid fa-calendar-plus"></i>
                 <span>Book Appointment</span>
             </a>
         </li>
 
         <li>
-            <a href=""
-                class="menu-link ">
+            <a href="{{ route('user.appointments.fetch') }}"
+                class="menu-link {{ request()->routeIs('user.appointments.fetch') ? 'active' : '' }}">
                 <i class="fa-solid fa-calendar-check"></i>
                 <span>My Appointments</span>
             </a>

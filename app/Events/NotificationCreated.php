@@ -13,22 +13,30 @@ class NotificationCreated implements ShouldBroadcast
 
     public $message;
     public $userId;
+    public $role;
 
-    public function __construct($userId, $message)
+    public function __construct($userId, $role, $message)
     {
         $this->userId = $userId;
+        $this->role = $role;
         $this->message = $message;
     }
 
     public function broadcastOn()
     {
-        return new PrivateChannel(
-            'notifications.' . $this->userId
-        );
+        return [
+            new PrivateChannel('notifications.' . $this->userId),
+            new PrivateChannel('notifications.role.' . $this->role),
+        ];
     }
 
     public function broadcastAs()
     {
         return 'notification.created';
+    }
+
+    public function broadcastWith()
+    {
+        return $this->message;
     }
 }

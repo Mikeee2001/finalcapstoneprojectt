@@ -23,7 +23,8 @@
 
         <!-- APPOINTMENTS -->
         <li>
-            <a href="#" class="menu-link">
+            <a href="{{ route('admin.all.appointments.fetch') }}"
+            class="menu-link {{ request()->routeIs('admin.all.appointments.fetch') ? 'active' : '' }}">
 
                 <i class="fa-solid fa-calendar-check"></i>
                 <span>Appointments</span>

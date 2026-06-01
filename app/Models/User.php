@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 // use Database\Factories\UserFactory;
+use App\Models\Appointments;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -57,6 +58,11 @@ class User extends Authenticatable
     public function vet()
     {
         return $this->hasOne(Vet::class);
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointments::class);
     }
 }
 

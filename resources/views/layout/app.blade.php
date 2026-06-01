@@ -16,7 +16,7 @@
     <!-- Custom CSS -->
     {{-- <link rel="stylesheet" href="{{ asset('css/user.css') }}"> --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <link rel="stylesheet" href="{{ asset('css/user.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin-sidebar.css') }}">
@@ -28,8 +28,9 @@
     <link rel="stylesheet" href="{{ asset('css/notification.css') }}">
 
 
-
+<meta name="user-id" content="{{ auth()->id() }}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="user-role" content="{{ auth()->user()->role }}">
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -180,7 +181,6 @@
         </div>
     </div>
 
-
     <script src="{{ asset('js/spinner.js') }}"></script>
    <!-- JQUERY -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -226,27 +226,37 @@ rel="stylesheet">
             return;
         }
 
-        window.Echo.private('notifications.{{ Auth::id() }}')
+        // ✅ DEFINE USER ID FIRST (THIS WAS YOUR BUG)
+        const userId = document.querySelector('meta[name="user-id"]').getAttribute('content');
+
+        window.Echo.private(`notifications.${userId}`)
             .listen('.notification.created', (e) => {
 
-                let badge = document.getElementById('notificationCount');
+                // 1. update badge
+                const badge = document.getElementById('notificationCount');
 
-                if (!badge) return;
+                if (badge) {
+                    badge.innerText = parseInt(badge.innerText || 0) + 1;
+                }
 
-                let count = parseInt(badge.innerText || 0);
+                // 2. add new item
+                const body = document.querySelector('.notification-body');
 
-                badge.innerText = count + 1;
+                if (body) {
+                    const html = `
+                    <div class="notification-item px-3 py-2 border-bottom">
+                        <div class="fw-semibold text-dark small">
+                            ${e.message.action ?? 'Notification'}
+                        </div>
+                        <div class="text-muted small mt-1">
+                            ${e.message.message ?? ''}
+                        </div>
+                    </div>
+                `;
 
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'info',
-                    title: e.message,
-                    showConfirmButton: false,
-                    timer: 3000
-                });
+                    body.insertAdjacentHTML('afterbegin', html);
+                }
             });
-
     });
 </script>
 

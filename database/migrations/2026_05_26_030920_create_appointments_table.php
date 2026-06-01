@@ -24,7 +24,8 @@ return new class extends Migration {
                 'pending',
                 'approved',
                 'completed',
-                'cancelled'
+                'cancelled',
+                'rescheduled'
             ])->default('pending');
 
             // Optional notes from user

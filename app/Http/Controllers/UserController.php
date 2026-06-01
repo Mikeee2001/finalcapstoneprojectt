@@ -24,12 +24,6 @@ class UserController extends Controller
         return view('user.settings');
     }
 
-
-    // public function getAppointmentList()
-    // {
-    //     return view('user.appointmentList');
-    // }
-
     public function updateUser(Request $request)
     {
         $user = auth()->user();
@@ -239,12 +233,14 @@ class UserController extends Controller
                     'message' => auth()->user()->name . ' submitted an appointment request.'
                 ])
             );
-            event(
-                new NotificationCreated(
-                    $admin->id,
-                    'New appointment request received.'
-                )
-            );
+            event(new NotificationCreated(
+                $admin->id,
+                auth()->user()->role,
+                [
+                    'action' => 'New Appointment',
+                    'message' => auth()->user()->fullname . ' submitted an appointment request.'
+                ]
+            ));
         }
 
         return response()->json([
@@ -254,13 +250,27 @@ class UserController extends Controller
         ]);
     }
 
-    public function showAppointmentList()
+    public function getAppointmentList()
     {
-        $appointments = auth()->user()->appointments()
-            ->with(['pet', 'service', 'vet'])
+        $appointments = Appointments::with(['pets', 'service'])
+            ->whereHas('pets', function ($query) {
+                $query->where('user_id', auth()->id());
+            })
             ->latest()
-            ->get();
+            ->paginate(10);
 
-        return view('user.appointment-list', compact('appointments'));
+        return view('user.appointmentList', compact('appointments'));
     }
+    public function cancelledStatus($id)
+    {
+        $appointment = Appointments::findOrFail($id);
+        $appointment->status = 'cancelled';
+        $appointment->save();
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Appointment cancelled successfully.'
+        ]);
+    }
+
 }

@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', [LoginController::class, 'landingpage'])->name('welcome');
 
 Route::get('/signin', [LoginController::class, 'showLoginForm'])->name('login');
@@ -40,6 +41,8 @@ Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function 
     Route::post('/services/add', [AdminController::class, 'addService'])->name('admin.add.services');
     Route::post('/service/toggle-status/{id}', [AdminController::class, 'toggleServiceStatus'])->name('admin.toggle.service.status');
     Route::get('notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::post('/appointments/{id}/status', [NotificationController::class, 'updateStatus'])->name('admin.appointments.updateStatus');
+    Route::get('/appointments-all/fetch', [AdminController::class, 'fetchAppointmentsAll'])->name('admin.all.appointments.fetch');
 });
 
 Route::prefix('vet')->middleware(['auth', 'checkRole:vet'])->group(function () {
@@ -60,12 +63,11 @@ Route::prefix('user')->middleware(['auth', 'checkRole:user'])->group(function ()
     Route::get('/pets', [UserController::class, 'petList'])->name('user.pets');
     Route::post('/pets/add', [UserController::class, 'createPet'])->name('user.pets.add');
     Route::delete('/pets/delete/{id}', [UserController::class, 'deletePet'])->name('user.pets.delete');
-    Route::get('/appointments', [UserController::class, 'getAppointmentForm'])->name('user.add.appointment');
+    Route::get('/appointments', [UserController::class, 'getAppointmentForm'])->name('user.appointmentForm');
     Route::post('/appointment-store', [UserController::class, 'storeAppointment'])->name('user.appointment.store');
     Route::get('notifications', [NotificationController::class, 'index'])->name('user.notifications.index');
-
+    Route::get('/appointments/fetch', [UserController::class, 'getAppointmentList'])->name('user.appointments.fetch');
 });
-
 
 Route::get('/email/verify/custom/{id}/{hash}', function ($id, $hash, Request $request) {
 
@@ -86,6 +88,17 @@ Route::get('/email/verify/custom/{id}/{hash}', function ($id, $hash, Request $re
     return redirect('/signin')
         ->with('success', 'Email verified successfully!');
 })->name('verification.verify.custom');
+
+Route::get('/notifications/unread-count', function () {
+    return response()->json([
+        'count' => auth()->user()->unreadNotifications()->count()
+    ]);
+});
+Route::post('/notifications/mark-as-read', function () {
+    auth()->user()->unreadNotifications->markAsRead();
+
+    return response()->json(['success' => true]);
+});
 
 
 // Logouts Routes

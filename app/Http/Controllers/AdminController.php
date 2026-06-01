@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\VetAccountMail;
+use App\Models\Appointments;
 use App\Models\Categories;
 use App\Models\Services;
 use App\Models\Specialization;
@@ -43,7 +44,7 @@ class AdminController extends Controller
 
     public function userList()
     {
-        $users = User::whereIn('role', ['admin', 'user','staff'])->orderBy('created_at', 'desc')
+        $users = User::whereIn('role', ['admin', 'user', 'staff'])->orderBy('created_at', 'desc')
             ->simplePaginate(10);
         $specializations = Specialization::all();
         return view('admin.users', compact('users', 'specializations'));
@@ -468,4 +469,17 @@ class AdminController extends Controller
         ]);
     }
 
+    public function fetchAppointmentsAll()
+    {
+        $appointments = Appointments::with([
+            'pets.user',
+            'vets.user',
+            'service',
+        ])
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.appointments', compact('appointments'));
+
+    }
 }
