@@ -167,53 +167,136 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        document.getElementById("appointmentForm").addEventListener("submit", function() {
+        $(document).ready(function() {
 
-            const btn = document.getElementById("submitBtn");
-            const text = document.getElementById("btnText");
-            const loading = document.getElementById("btnLoading");
+            // Time validation
+            $('#requested_time').on('change', function() {
 
-            btn.disabled = true;
-            text.classList.add("d-none");
-            loading.classList.remove("d-none");
+                let selectedTime = $(this).val();
 
-        });
-    </script>
-    <script>
-        document.getElementById('requested_time').addEventListener('change', function() {
+                if (selectedTime < '08:00' || selectedTime > '17:00') {
 
-            let selectedTime = this.value;
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Invalid Time',
+                        text: 'Appointments are only available from 8:00 AM to 5:00 PM.'
+                    });
 
-            if (selectedTime < '08:00' || selectedTime > '17:00') {
-
-                alert('Appointments are only available from 8:00 AM to 5:00 PM.');
-
-                this.value = '';
-            }
-        });
-    </script>
-    <script>
-        $("#appointmentForm").submit(function(e) {
-
-            e.preventDefault();
-
-            $.ajax({
-                url: $(this).attr('action'),
-                type: "POST",
-                data: $(this).serialize(),
-
-                success: function(response) {
-
-                    if (response.status === 1) {
-
-                        window.location.href = "{{ route('user.appointments.fetch') }}";
-                    }
-                },
-
-                error: function(xhr) {
-                    console.log(xhr.responseText);
+                    $(this).val('');
                 }
             });
+
+            // Form submission
+            $("#appointmentForm").submit(function(e) {
+
+                e.preventDefault();
+
+                let pet = $("select[name='pet_id']").val();
+                let service = $("select[name='service_id']").val();
+                let date = $("input[name='requested_date']").val();
+                let time = $("select[name='requested_time']").val();
+                let notes = $("textarea[name='notes']").val();
+
+                // Client-side validation
+                if (!pet) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Pet Required',
+                        text: 'Please select a pet.'
+                    });
+                    return;
+                }
+
+                if (!service) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Service Required',
+                        text: 'Please select a service.'
+                    });
+                    return;
+                }
+
+                if (!date) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Date Required',
+                        text: 'Please select an appointment date.'
+                    });
+                    return;
+                }
+
+                if (!time) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Time Required',
+                        text: 'Please select an appointment time.'
+                    });
+                    return;
+                }
+
+
+                // Loading state
+                const btn = document.getElementById("submitBtn");
+                const text = document.getElementById("btnText");
+                const loading = document.getElementById("btnLoading");
+
+                btn.disabled = true;
+                text.classList.add("d-none");
+                loading.classList.remove("d-none");
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: $(this).serialize(),
+
+                    success: function(response) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Appointment Submitted',
+                            text: 'Your appointment has been booked successfully.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+
+                            window.location.href =
+                                "{{ route('user.appointments.fetch') }}";
+
+                        });
+                    },
+
+                    error: function(xhr) {
+
+                        // Restore button state
+                        btn.disabled = false;
+                        text.classList.remove("d-none");
+                        loading.classList.add("d-none");
+
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+
+                            let errors = Object.values(xhr.responseJSON.errors)
+                                .flat()
+                                .join('<br>');
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errors
+                            });
+
+                        } else {
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Submission Failed',
+                                text: 'Something went wrong. Please try again.'
+                            });
+
+                        }
+                    }
+                });
+
+            });
+
         });
     </script>
 

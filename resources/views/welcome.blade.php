@@ -197,17 +197,18 @@
 
     </section>
 
-    @if ($services->isNotEmpty())
+    @if ($services->count())
 
-        <!-- Services Section Here -->
+        <!-- Services Section -->
         <section id="services" class="py-28 bg-gradient-to-b from-white to-gray-50">
 
             <div class="max-w-7xl mx-auto px-6">
 
+                <!-- HEADER (ADDED BACK) -->
                 <div class="text-center mb-16 fade-up">
 
                     <h2 class="text-5xl font-bold mb-5">
-                        Veterinary Services
+                        Our Services
                     </h2>
 
                     <p class="text-gray-600 text-lg max-w-2xl mx-auto">
@@ -216,47 +217,30 @@
 
                 </div>
 
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Services Grid (IMPORTANT ID) -->
+                <div id="services-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                    @forelse($services as $service)
-                        <div
-                            class="fade-up bg-white rounded-[30px] shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transition duration-500 hover:-translate-y-2">
+                    @forelse ($services as $service)
+                        <div class="bg-white rounded-[30px] shadow-lg border border-gray-100 p-8">
 
-                            <div class="p-8">
+                            <h3 class="text-2xl font-bold mb-3">
+                                {{ $service->service_name }}
+                            </h3>
 
-                                @if ($service->category)
-                                    <span
-                                        class="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full mb-4">
-                                        {{ $service->category->category_name }}
-                                    </span>
-                                @endif
+                            <p class="text-gray-600 mb-4">
+                                {{ $service->service_description }}
+                            </p>
 
-                                <h3 class="text-2xl font-bold mb-4">
-                                    {{ $service->service_name }}
-                                </h3>
-
-                                <p class="text-gray-600 leading-relaxed mb-6">
-                                    {{ $service->service_description }}
-                                </p>
-
-                                <div class="border-t pt-4 flex justify-between items-center">
-
-                                    <span class="text-gray-500">
-                                        Service Fee
-                                    </span>
-
-                                    <span class="text-2xl font-bold text-blue-600">
-                                        ₱{{ number_format($service->price, 2) }}
-                                    </span>
-
-                                </div>
-
+                            <div class="border-t pt-4 flex justify-between">
+                                <span>Service Fee</span>
+                                <span class="font-bold text-blue-600">
+                                    ₱{{ number_format($service->price, 2) }}
+                                </span>
                             </div>
 
                         </div>
 
                     @empty
-
                         <div class="col-span-3 text-center text-gray-500">
                             No services available.
                         </div>
@@ -264,132 +248,145 @@
 
                 </div>
 
+                <!-- PAGINATION (IMPORTANT WRAPPER) -->
+                @if ($services->hasPages())
+                    <div class="pagination-wrapper flex justify-center gap-2 mt-10">
+
+                        @for ($i = 1; $i <= $services->lastPage(); $i++)
+                            <a href="{{ $services->url($i) }}"
+                                class="page-link px-3 py-1 rounded-full
+                       {{ $services->currentPage() == $i ? 'bg-blue-600 text-white' : 'bg-gray-200' }}">
+                                {{ $i }}
+                            </a>
+                        @endfor
+
+                    </div>
+                @endif
+
+            </div>
+
+        </section>
+
+        <!-- Features -->
+        <section id="features" class="py-28">
+
+            <div class="max-w-7xl mx-auto px-6">
+
+                <div class="text-center mb-16 fade-up">
+
+                    <h2 class="text-5xl font-bold mb-5">
+                        Powerful Features
+                    </h2>
+
+                    <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+                        Everything you need to manage your veterinary clinic efficiently.
+                    </p>
+
+                </div>
+
+                @php
+                    $features = [
+                        [
+                            'Pet & Owner Management',
+                            'Manage pets, breeds, species, and owner information securely.',
+                            'https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1200&auto=format&fit=crop',
+                        ],
+                        [
+                            'Appointment Scheduling',
+                            'Track appointments and veterinarian availability.',
+                            'https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?q=80&w=1200&auto=format&fit=crop',
+                        ],
+                        [
+                            'Medical Consultation',
+                            'Store diagnosis, findings, symptoms, and treatments.',
+                            'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop',
+                        ],
+                    ];
+                @endphp
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    @foreach ($features as $feature)
+                        <div
+                            class="fade-up bg-white border border-gray-100 rounded-[30px] overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 hover:-translate-y-2">
+
+                            <img src="{{ $feature[2] }}" class="w-full h-56 object-cover" alt="Feature Image">
+
+                            <div class="p-8">
+
+                                <h3 class="text-2xl font-bold mb-4">
+                                    {{ $feature[0] }}
+                                </h3>
+
+                                <p class="text-gray-600 leading-relaxed">
+                                    {{ $feature[1] }}
+                                </p>
+
+                            </div>
+
+                        </div>
+                    @endforeach
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Workflow -->
+        <section id="workflow" class="bg-gray-950 text-white py-28 relative overflow-hidden">
+
+            <div class="absolute w-[400px] h-[400px] bg-blue-500 opacity-20 blur-3xl rounded-full top-0 left-0"></div>
+
+            <div class="max-w-7xl mx-auto px-6 relative z-10">
+
+                <div class="text-center mb-20 fade-up">
+
+                    <h2 class="text-5xl font-bold mb-5">
+                        Clinic Workflow
+                    </h2>
+
+                    <p class="text-gray-300 text-lg">
+                        Complete veterinary process from appointment to payment.
+                    </p>
+
+                </div>
+
+                @php
+                    $steps = [
+                        'Book Appointment',
+                        'Vet Consultation',
+                        'Prescription & Lab Tests',
+                        'Invoice Generation',
+                        'Payment Processing',
+                    ];
+                @endphp
+
+                <div class="grid md:grid-cols-5 gap-6">
+
+                    @foreach ($steps as $index => $step)
+                        <div
+                            class="fade-up bg-white/10 border border-white/10 backdrop-blur-xl rounded-3xl p-8 text-center hover:bg-white/20 transition">
+
+                            <div
+                                class="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-600 flex items-center justify-center text-2xl font-bold shadow-lg">
+                                {{ $index + 1 }}
+                            </div>
+
+                            <h3 class="font-semibold text-lg">
+                                {{ $step }}
+                            </h3>
+
+                        </div>
+                    @endforeach
+
+                </div>
+
             </div>
 
         </section>
     @endif
-
-
-    <!-- Features -->
-    <section id="features" class="py-28">
-
-        <div class="max-w-7xl mx-auto px-6">
-
-            <div class="text-center mb-16 fade-up">
-
-                <h2 class="text-5xl font-bold mb-5">
-                    Powerful Features
-                </h2>
-
-                <p class="text-gray-600 max-w-2xl mx-auto text-lg">
-                    Everything you need to manage your veterinary clinic efficiently.
-                </p>
-
-            </div>
-
-            @php
-                $features = [
-                    [
-                        'Pet & Owner Management',
-                        'Manage pets, breeds, species, and owner information securely.',
-                        'https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1200&auto=format&fit=crop',
-                    ],
-                    [
-                        'Appointment Scheduling',
-                        'Track appointments and veterinarian availability.',
-                        'https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?q=80&w=1200&auto=format&fit=crop',
-                    ],
-                    [
-                        'Medical Consultation',
-                        'Store diagnosis, findings, symptoms, and treatments.',
-                        'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop',
-                    ],
-                ];
-            @endphp
-
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-                @foreach ($features as $feature)
-                    <div
-                        class="fade-up bg-white border border-gray-100 rounded-[30px] overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 hover:-translate-y-2">
-
-                        <img src="{{ $feature[2] }}" class="w-full h-56 object-cover" alt="Feature Image">
-
-                        <div class="p-8">
-
-                            <h3 class="text-2xl font-bold mb-4">
-                                {{ $feature[0] }}
-                            </h3>
-
-                            <p class="text-gray-600 leading-relaxed">
-                                {{ $feature[1] }}
-                            </p>
-
-                        </div>
-
-                    </div>
-                @endforeach
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- Workflow -->
-    <section id="workflow" class="bg-gray-950 text-white py-28 relative overflow-hidden">
-
-        <div class="absolute w-[400px] h-[400px] bg-blue-500 opacity-20 blur-3xl rounded-full top-0 left-0"></div>
-
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-
-            <div class="text-center mb-20 fade-up">
-
-                <h2 class="text-5xl font-bold mb-5">
-                    Clinic Workflow
-                </h2>
-
-                <p class="text-gray-300 text-lg">
-                    Complete veterinary process from appointment to payment.
-                </p>
-
-            </div>
-
-            @php
-                $steps = [
-                    'Book Appointment',
-                    'Vet Consultation',
-                    'Prescription & Lab Tests',
-                    'Invoice Generation',
-                    'Payment Processing',
-                ];
-            @endphp
-
-            <div class="grid md:grid-cols-5 gap-6">
-
-                @foreach ($steps as $index => $step)
-                    <div
-                        class="fade-up bg-white/10 border border-white/10 backdrop-blur-xl rounded-3xl p-8 text-center hover:bg-white/20 transition">
-
-                        <div
-                            class="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-600 flex items-center justify-center text-2xl font-bold shadow-lg">
-                            {{ $index + 1 }}
-                        </div>
-
-                        <h3 class="font-semibold text-lg">
-                            {{ $step }}
-                        </h3>
-
-                    </div>
-                @endforeach
-
-            </div>
-
-        </div>
-
-    </section>
-
 
     <!-- Gallery -->
     <section id="gallery" class="py-28 bg-gray-100">
@@ -500,6 +497,7 @@
 
     </footer>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <!-- Scroll Animation -->
     <script>
@@ -515,6 +513,35 @@
 
         document.querySelectorAll('.fade-up').forEach((el) => {
             observer.observe(el);
+        });
+    </script>
+
+
+    <script>
+        $(document).on('click', '.page-link', function(e) {
+            e.preventDefault();
+
+            let url = $(this).attr('href');
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(response) {
+
+                    // replace services
+                    let services = $(response).find('#services-container').html();
+                    $('#services-container').html(services);
+
+                    // replace pagination
+                    let pagination = $(response).find('.pagination-wrapper').html();
+                    $('.pagination-wrapper').html(pagination);
+
+                    // scroll back to services
+                    document.getElementById('services').scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
         });
     </script>
 

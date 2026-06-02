@@ -97,4 +97,19 @@ class VetController extends Controller
         ]);
     }
 
+    public function getAssignedAppointments()
+    {
+        $vet = auth()->user()->vet;
+
+        $appointments = $vet->appointments()
+            ->with(['pets', 'services'])
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'status' => 1,
+            'appointments' => $appointments
+        ]);
+    }
+
 }

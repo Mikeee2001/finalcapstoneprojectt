@@ -68,6 +68,20 @@
 
         </li>
 
+         <!-- PRESCRIPTIONS -->
+        <li>
+
+            <a href="#"
+               class="menu-link">
+
+                <i class="fa-solid fa-prescription-bottle-medical"></i>
+
+                <span>Lab Tests</span>
+
+            </a>
+
+        </li>
+s
         <!-- PRESCRIPTIONS -->
         <li>
 

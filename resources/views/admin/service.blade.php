@@ -98,25 +98,23 @@
                                 </td>
 
                                 <td class="text-end">
-
-                                     <button
+                                    <button
                                         class="btn btn-sm toggle-status-btn {{ $service->status === 'active' ? 'btn-success' : 'btn-secondary' }}"
                                         data-id="{{ $service->id }}" data-status="{{ $service->status ?? 'inactive' }}">
                                         {{ ucfirst($service->status ?? 'inactive') }}
                                     </button>
                                 </td>
+
                             </tr>
                         @empty
-
-                            <tr>
+                            <tr id="noDataRow">
                                 <td colspan="6" class="text-center py-5 text-muted">
-                                    No Services Found
+                                    No services found
                                 </td>
                             </tr>
                         @endforelse
 
                     </tbody>
-
                 </table>
 
             </div>
@@ -236,17 +234,18 @@
             // FILTER
             function filterTable() {
 
-                let search = $('#searchInput').val().toLowerCase();
+                let search = $('#searchInput').val().toLowerCase().trim();
                 let status = $('#statusFilter').val();
 
                 let visible = 0;
 
                 $('.service-row').each(function() {
 
-                    let name = $(this).data('name');
+                    let name = ($(this).data('name') || '').toLowerCase();
                     let rowStatus = $(this).data('status');
 
-                    let match = name.includes(search) &&
+                    let match =
+                        name.includes(search) &&
                         (status === "" || rowStatus === status);
 
                     $(this).toggle(match);
@@ -254,6 +253,29 @@
                     if (match) visible++;
                 });
 
+                // HANDLE NO RESULTS
+                if (visible === 0) {
+
+                    if ($('#noDataRow').length === 0) {
+                        $('#servicesTable').append(`
+                <tr id="noDataRow">
+                    <td colspan="6" class="text-center py-5 text-muted">
+                        No services found
+                    </td>
+                </tr>
+            `);
+                    }
+
+                } else {
+                    $('#noDataRow').remove();
+                }
+
+                // HANDLE PAGINATION VISIBILITY
+                if (visible === 0) {
+                    $('.d-flex.justify-content-between.p-3.border-top').hide();
+                } else {
+                    $('.d-flex.justify-content-between.p-3.border-top').show();
+                }
             }
 
             $('#searchInput').on('keyup', filterTable);

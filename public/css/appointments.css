@@ -1,0 +1,40 @@
+  .appointment-card {
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .appointment-header {
+      background: linear-gradient(135deg, #0d6efd, #0a58ca);
+      color: white;
+      padding: 20px;
+  }
+
+  .appointment-container {
+      max-width: 1400px;
+      margin: auto;
+  }
+
+  .table td,
+  .table th {
+      vertical-align: middle;
+  }
+
+  .badge.rounded-pill {
+      min-width: 100px;
+      text-align: center;
+      font-size: 13px;
+  }
+
+  .card {
+      border-radius: 16px;
+  }
+
+  .table tbody tr:hover {
+      background: #f8f9fa;
+  }
+
+  .table td {
+      padding: 16px 12px;
+  }

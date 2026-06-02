@@ -12,7 +12,7 @@ class Services extends Model
 
     protected $fillable = [
         'service_name',
-        'description',
+        'service_description',
         'price',
         'invoice_item_id',
         'category_id',

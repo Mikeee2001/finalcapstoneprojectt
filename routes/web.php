@@ -43,6 +43,8 @@ Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function 
     Route::get('notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
     Route::post('/appointments/{id}/status', [NotificationController::class, 'updateStatus'])->name('admin.appointments.updateStatus');
     Route::get('/appointments-all/fetch', [AdminController::class, 'fetchAppointmentsAll'])->name('admin.all.appointments.fetch');
+    Route::post('/appointments/{id}/reschedule', [NotificationController::class, 'reschedule'])->name('admin.appointments.reschedule');
+    Route::get('/appointments/calendar', [AdminController::class, 'calendarEvents'])->name('admin.appointments.calendar');
 });
 
 Route::prefix('vet')->middleware(['auth', 'checkRole:vet'])->group(function () {
@@ -67,7 +69,11 @@ Route::prefix('user')->middleware(['auth', 'checkRole:user'])->group(function ()
     Route::post('/appointment-store', [UserController::class, 'storeAppointment'])->name('user.appointment.store');
     Route::get('notifications', [NotificationController::class, 'index'])->name('user.notifications.index');
     Route::get('/appointments/fetch', [UserController::class, 'getAppointmentList'])->name('user.appointments.fetch');
+    Route::post('/appointments/{id}/status', [NotificationController::class, 'updateStatus'])->name('user.appointments.updateStatus');
+
 });
+
+Route::get('/vet/assigned-appointments', [VetController::class, 'getAssignedAppointments'])->name('vet.assigned-appointments');
 
 Route::get('/email/verify/custom/{id}/{hash}', function ($id, $hash, Request $request) {
 

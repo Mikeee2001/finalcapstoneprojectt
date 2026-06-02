@@ -28,22 +28,81 @@ class NotificationController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-        $appointment = Appointments::findOrFail($id);
-
-        $status = $request->status;
-
-        $appointment->update([
-            'status' => $status
+        $request->validate([
+            'status' => 'required|in:approved,completed,cancelled'
         ]);
 
-        // 🔥 Send notification (database + broadcast if your Notification supports it)
-        $appointment->user->notify(
-            new AppointmentStatusNotification($appointment, $status)
-        );
+        $appointment = Appointments::findOrFail($id);
+
+        $appointment->update([
+            'status' => $request->status
+        ]);
+
+        $user = $appointment->pets->user ?? null;
+
+        if ($user) {
+
+            // 1. Database notification
+            $user->notify(
+                new AppointmentStatusNotification($appointment, $request->status)
+            );
+
+            // 2. Real-time event broadcast (THIS IS WHAT YOU NEED)
+            event(new \App\Events\NotificationCreated(
+                $user->id,
+                $user->role,
+                [
+                    'action' => 'Appointment ' . ucfirst($request->status),
+                    'message' => 'Your appointment was ' . $request->status,
+                    'appointment_id' => $appointment->id
+                ]
+            ));
+        }
 
         return response()->json([
             'status' => 1,
-            'message' => 'Appointment ' . $status . ' successfully.'
+            'message' => 'Appointment ' . $request->status . ' successfully.'
         ]);
     }
+
+    public function reschedule(Request $request, $id)
+    {
+        $request->validate([
+            'appointment_date' => 'sometimes|date',
+            'appointment_time' => 'sometimes'
+        ]);
+
+        $appointment = Appointments::findOrFail($id);
+
+        $data = [];
+
+        if ($request->filled('appointment_date')) {
+            $data['appointment_date'] = $request->appointment_date;
+        }
+
+        if ($request->filled('appointment_time')) {
+            $data['appointment_time'] = $request->appointment_time;
+        }
+
+        // only change status if something is actually updated
+        if (!empty($data)) {
+            $data['status'] = 'rescheduled';
+        }
+
+        $appointment->update($data);
+
+        $user = $appointment->pets->user ?? null;
+
+        if ($user) {
+            $user->notify(
+                new AppointmentStatusNotification($appointment, 'rescheduled')
+            );
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Appointment rescheduled successfully!'
+        ]);
+    }
+
 }

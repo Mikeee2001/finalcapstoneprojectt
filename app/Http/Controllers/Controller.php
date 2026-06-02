@@ -9,12 +9,14 @@ abstract class Controller
 {
     public function landingpage()
     {
-        $services = Services::where('status', 'active')->get();
+        $services = Services::where('status', 'active')
+            ->latest()
+            ->paginate(6);
 
         $vet = Vet::with('specializations')
             ->where('status', 'active')
             ->get();
-        //  dd($services);
+
         return view('welcome', compact('services', 'vet'));
     }
 }

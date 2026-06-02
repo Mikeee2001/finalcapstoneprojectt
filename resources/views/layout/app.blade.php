@@ -16,7 +16,8 @@
     <!-- Custom CSS -->
     {{-- <link rel="stylesheet" href="{{ asset('css/user.css') }}"> --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/user.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin-sidebar.css') }}">
@@ -206,6 +207,9 @@ rel="stylesheet">
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+
+{{-- APPOINTMENT CALENDAR --}}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
 
 <!-- SWEETALERT -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

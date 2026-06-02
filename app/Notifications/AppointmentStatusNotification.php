@@ -49,9 +49,11 @@ class AppointmentStatusNotification extends Notification
 
         return (new MailMessage)
             ->subject($subject)
-            ->greeting('Hello ' . $notifiable->fullname)
-            ->line($message)
-            ->line('Status: ' . ucfirst($this->status));
+            ->view('emails.appointmentstatus', [
+                'appointment' => $this->appointment,
+                'status' => $this->status,
+                'user' => $notifiable,
+            ]);
     }
 
     public function toArray($notifiable)

@@ -9,7 +9,7 @@
             <div>
 
                 <h1 class="fw-bold text-dark">
-                    Welcome, Dr. {{ auth()->user()->fullname }}
+                    Welcome Sir. {{ auth()->user()->fullname }}
                 </h1>
 
                 <p class="text-muted fs-5 mb-0">

@@ -257,7 +257,7 @@ class UserController extends Controller
                 $query->where('user_id', auth()->id());
             })
             ->latest()
-            ->paginate(10);
+            ->paginate(5);
 
         return view('user.appointmentList', compact('appointments'));
     }

@@ -119,123 +119,101 @@
 
     <!-- CREATE VET MODAL -->
     <div class="modal fade" id="createVetModal" tabindex="-1">
-
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-
-            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow rounded-3">
 
                 <!-- HEADER -->
-                <div class="modal-header bg-success text-white">
-
-                    <h5 class="modal-title fw-bold">
-                        <i class="fa-solid fa-user-doctor me-2"></i>
+                <div class="modal-header bg-success text-white py-2">
+                    <h5 class="modal-title fw-semibold fs-6">
+                        <i class="fa-solid fa-user-doctor fa-sm me-1"></i>
                         Create Veterinarian
                     </h5>
 
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal">
                     </button>
-
                 </div>
 
                 <!-- BODY -->
-                <div class="modal-body p-3 bg-light">
+                <div class="modal-body p-2 bg-light">
 
                     <form id="createVetForm" enctype="multipart/form-data">
-
                         @csrf
 
-                        <div class="row">
+                        <div class="row g-2">
 
-                            <!-- PHOTO COLUMN -->
-                            <div class="col-md-3">
+                            <!-- PHOTO -->
+                            <div class="col-md-2">
+                                <div class="bg-white p-2 rounded-3 shadow-sm text-center h-100">
 
-                                <div class="bg-white p-3 rounded-4 shadow-sm text-center">
-
-                                    <label class="fw-bold mb-2">
-                                        Veterinarian Photo
+                                    <label class="fw-semibold small mb-2 d-block">
+                                        Photo
                                     </label>
 
-                                    <img id="previewImage" src="https://via.placeholder.com/120x120?text=Vet"
-                                        class="rounded-3 border mb-3"
-                                        style="
-                                        width:120px;
-                                        height:120px;
-                                        object-fit:cover;
-                                    ">
+                                    <img id="previewImage" src="https://via.placeholder.com/90x90?text=Vet"
+                                        class="rounded border mb-2" style="width:90px;height:90px;object-fit:cover;">
 
-                                    <input type="file" name="image" id="image" class="form-control">
+                                    <input type="file" name="image" id="image"
+                                        class="form-control form-control-sm">
 
                                     <small class="text-muted">
-                                        JPG, PNG, GIF
+                                        JPG, PNG
                                     </small>
-
                                 </div>
-
                             </div>
 
-                            <!-- FORM COLUMN -->
-                            <div class="col-md-9">
+                            <!-- FORM -->
+                            <div class="col-md-10">
+                                <div class="bg-white p-3 rounded-3 shadow-sm">
 
-                                <div class="bg-white p-4 rounded-4 shadow-sm">
-
-                                    <div class="row">
+                                    <div class="row g-2">
 
                                         <!-- FULLNAME -->
-                                        <div class="col-md-4 mb-3">
-
-                                            <label class="fw-bold">
+                                        <div class="col-md-4">
+                                            <label class="fw-semibold small">
                                                 Fullname
                                             </label>
 
-                                            <input type="text" name="fullname" class="form-control"
-                                                placeholder="Enter fullname">
-
+                                            <input type="text" name="fullname" class="form-control form-control-sm"
+                                                placeholder="Fullname">
                                         </div>
 
                                         <!-- EMAIL -->
-                                        <div class="col-md-4 mb-3">
-
-                                            <label class="fw-bold">
+                                        <div class="col-md-4">
+                                            <label class="fw-semibold small">
                                                 Email
                                             </label>
 
-                                            <input type="email" name="email" class="form-control"
-                                                placeholder="Enter email">
-
+                                            <input type="email" name="email" class="form-control form-control-sm"
+                                                placeholder="Email">
                                         </div>
 
                                         <!-- LICENSE -->
-                                        <div class="col-md-4 mb-3">
-
-                                            <label class="fw-bold">
-                                                License Number
+                                        <div class="col-md-4">
+                                            <label class="fw-semibold small">
+                                                License No.
                                             </label>
 
-                                            <input type="text" name="license_number" class="form-control"
+                                            <input type="text" name="license_number" class="form-control form-control-sm"
                                                 placeholder="License Number">
-
                                         </div>
 
                                         <!-- HIRE DATE -->
-                                        <div class="col-md-4 mb-3">
-
-                                            <label class="fw-bold">
+                                        <div class="col-md-4">
+                                            <label class="fw-semibold small">
                                                 Hire Date
                                             </label>
 
-                                            <input type="date" name="hire_date" class="form-control">
-
+                                            <input type="date" name="hire_date" class="form-control form-control-sm">
                                         </div>
 
                                         <!-- SPECIALIZATIONS -->
-                                        <div class="col-md-8 mb-3">
-
-                                            <label class="fw-bold">
-                                                Select Specializations
+                                        <div class="col-md-8">
+                                            <label class="fw-semibold small">
+                                                Specializations
                                             </label>
 
-                                            <select name="specializations[]" id="specializations" class="form-select"
-                                                multiple size="3">
+                                            <select name="specializations[]" id="specializations"
+                                                class="form-select form-select-sm" multiple size="2">
 
                                                 @foreach ($specializations as $specialization)
                                                     <option value="{{ $specialization->id }}">
@@ -244,58 +222,50 @@
                                                 @endforeach
 
                                             </select>
-                                            <small class="text-muted">
-                                                Hold CTRL to select multiple.
-                                            </small>
 
+                                            <small class="text-muted">
+                                                Hold CTRL to select multiple
+                                            </small>
                                         </div>
 
                                         <!-- NEW SPECIALIZATION -->
                                         <div class="col-12">
-
-                                            <label class="fw-bold">
+                                            <label class="fw-semibold small">
                                                 Add New Specialization
                                             </label>
 
-                                            <input type="text" name="new_specializations" class="form-control"
-                                                placeholder="Example: Surgery, Cardiology, Dentistry">
+                                            <input type="text" name="new_specializations"
+                                                class="form-control form-control-sm"
+                                                placeholder="Surgery, Cardiology, Dentistry">
 
                                             <small class="text-muted">
-                                                Separate multiple specializations with commas.
+                                                Separate multiple values with commas.
                                             </small>
-
                                         </div>
 
                                     </div>
 
                                 </div>
-
                             </div>
 
                         </div>
 
-                        <!-- BUTTON -->
-                        <div class="mt-3">
+                        <!-- SAVE BUTTON -->
+                        <div class="mt-2">
+                            <button type="submit" class="btn btn-success btn-sm w-100">
 
-                            <button type="submit" class="btn btn-success w-100 py-2 fw-bold">
-
-                                <i class="fas fa-save me-2"></i>
+                                <i class="fas fa-save fa-sm me-1"></i>
                                 Save Veterinarian
-
                             </button>
-
                         </div>
 
                     </form>
 
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
+    
     <!-- CREATE USER MODAL -->
     <div class="modal fade" id="createModal">
 
@@ -1152,11 +1122,11 @@
                                 ${
                                     vet.image
                                     ? `<img src="${vet.image}"
-                                                                                                                alt="Vet Image"
-                                                                                                                class="rounded-4 shadow"
-                                                                                                                width="140"
-                                                                                                                height="140"
-                                                                                                                style="object-fit: cover;">`
+                                                                                                                    alt="Vet Image"
+                                                                                                                    class="rounded-4 shadow"
+                                                                                                                    width="140"
+                                                                                                                    height="140"
+                                                                                                                    style="object-fit: cover;">`
                                     : 'No image available'
                                 }
 

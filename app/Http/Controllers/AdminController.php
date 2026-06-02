@@ -386,6 +386,7 @@ class AdminController extends Controller
     public function categories()
     {
         $services = Services::with('category')
+            ->latest()
             ->paginate(10);
 
         $categories = Categories::all();
@@ -473,13 +474,31 @@ class AdminController extends Controller
     {
         $appointments = Appointments::with([
             'pets.user',
-            'vets.user',
+            'vets',
             'service',
-        ])
-            ->latest()
-            ->paginate(10);
+        ])->latest()->paginate(5);
 
-        return view('admin.appointments', compact('appointments'));
+        $calendarAppointments = Appointments::with([
+            'pets.user',
+            'vets',
+            'service',
+        ])->get();
 
+        $statusColors = [
+            'pending' => '#ffc107',
+            'approved' => '#198754',
+            'completed' => '#0d6efd',
+            'cancelled' => '#dc3545',
+            'rescheduled' => '#0dcaf0',
+        ];
+
+        $vets = Vet::all();
+
+        return view('admin.appointments', compact(
+            'appointments',
+            'calendarAppointments',
+            'vets',
+            'statusColors'
+        ));
     }
 }

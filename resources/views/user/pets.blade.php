@@ -13,10 +13,10 @@
 
             <div>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPetModal">
-
+                    <i class="fa-solid fa-plus me-2"></i>
                     Add Pet
-
                 </button>
+
             </div>
 
         </div>
@@ -125,12 +125,6 @@
                                 <p class="text-muted mb-4">
                                     Add your first pet to get started.
                                 </p>
-
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#createPetModal">
-                                    <i class="fa-solid fa-plus me-2"></i>
-                                    Add Pet
-                                </button>
 
                             </div>
 
