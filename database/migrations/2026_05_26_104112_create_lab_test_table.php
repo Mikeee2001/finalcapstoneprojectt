@@ -18,11 +18,11 @@ return new class extends Migration {
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->unsignedBigInteger('consultation_id');
+            $table->unsignedBigInteger('records_id');
             $table->unsignedBigInteger('serviced_id');
 
 
-            $table->foreign('consultation_id')->references('id')->on('consultation')->onDelete('cascade');
+            $table->foreign('records_id')->references('id')->on('medical_records')->onDelete('cascade');
                 $table->foreign('serviced_id')->references('id')->on('services')->onDelete('cascade');
         });
     }

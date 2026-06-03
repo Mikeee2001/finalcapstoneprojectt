@@ -44,7 +44,8 @@ Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function 
     Route::post('/appointments/{id}/status', [NotificationController::class, 'updateStatus'])->name('admin.appointments.updateStatus');
     Route::get('/appointments-all/fetch', [AdminController::class, 'fetchAppointmentsAll'])->name('admin.all.appointments.fetch');
     Route::post('/appointments/{id}/reschedule', [NotificationController::class, 'reschedule'])->name('admin.appointments.reschedule');
-    Route::get('/appointments/calendar', [AdminController::class, 'calendarEvents'])->name('admin.appointments.calendar');
+    Route::get('/appointments/calendar', [AdminController::class, 'calendarData'])->name('admin.appointments.calendar');
+    Route::post('/appointments/assign-vet',[AdminController::class, 'assignVet'])->named('admin.appointments.assignVet');
 });
 
 Route::prefix('vet')->middleware(['auth', 'checkRole:vet'])->group(function () {

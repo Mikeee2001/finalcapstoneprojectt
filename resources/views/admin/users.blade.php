@@ -1,6 +1,68 @@
 @extends('layout.app')
 
 @section('content')
+    <!-- STYLES -->
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+
+        .card {
+            border-radius: 20px;
+        }
+
+        .table thead th {
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .table tbody tr {
+            transition: 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            transform: scale(1.005);
+            background: #f8f9fa;
+        }
+
+        .table td {
+            vertical-align: middle;
+            border-top: 1px solid #f1f1f1;
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            border: none;
+        }
+
+        .btn-danger {
+            border: none;
+        }
+
+        .modal-content {
+            border-radius: 20px;
+        }
+
+        .form-control {
+            height: 45px;
+            border: 1px solid #e5e5e5;
+            box-shadow: none !important;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+        }
+
+        .form-select[multiple] {
+            height: auto !important;
+            min-height: 140px;
+            border-radius: 15px;
+            padding: 10px;
+        }
+    </style>
+
     <!-- PAGE CONTAINER -->
     <div class="container-fluid mt-4">
 
@@ -174,7 +236,7 @@
                                             </label>
 
                                             <input type="text" name="fullname" class="form-control form-control-sm"
-                                                placeholder="Fullname">
+                                                placeholder="Enter Fullname">
                                         </div>
 
                                         <!-- EMAIL -->
@@ -184,7 +246,7 @@
                                             </label>
 
                                             <input type="email" name="email" class="form-control form-control-sm"
-                                                placeholder="Email">
+                                                placeholder="Enter Email address">
                                         </div>
 
                                         <!-- LICENSE -->
@@ -265,7 +327,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- CREATE USER MODAL -->
     <div class="modal fade" id="createModal">
 
@@ -453,69 +515,6 @@
 
         </div>
     </div>
-
-
-    <!-- STYLES -->
-    <style>
-        body {
-            background: #f4f6f9;
-        }
-
-        .card {
-            border-radius: 20px;
-        }
-
-        .table thead th {
-            border: none;
-            font-size: 14px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .table tbody tr {
-            transition: 0.2s ease;
-        }
-
-        .table tbody tr:hover {
-            transform: scale(1.005);
-            background: #f8f9fa;
-        }
-
-        .table td {
-            vertical-align: middle;
-            border-top: 1px solid #f1f1f1;
-        }
-
-        .btn-info {
-            background: #17a2b8;
-            border: none;
-        }
-
-        .btn-danger {
-            border: none;
-        }
-
-        .modal-content {
-            border-radius: 20px;
-        }
-
-        .form-control {
-            height: 45px;
-            border: 1px solid #e5e5e5;
-            box-shadow: none !important;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-        }
-
-        .form-select[multiple] {
-            height: auto !important;
-            min-height: 140px;
-            border-radius: 15px;
-            padding: 10px;
-        }
-    </style>
 
 
     <!-- SCRIPTS -->
@@ -1122,11 +1121,11 @@
                                 ${
                                     vet.image
                                     ? `<img src="${vet.image}"
-                                                                                                                    alt="Vet Image"
-                                                                                                                    class="rounded-4 shadow"
-                                                                                                                    width="140"
-                                                                                                                    height="140"
-                                                                                                                    style="object-fit: cover;">`
+                                                                                                                        alt="Vet Image"
+                                                                                                                        class="rounded-4 shadow"
+                                                                                                                        width="140"
+                                                                                                                        height="140"
+                                                                                                                        style="object-fit: cover;">`
                                     : 'No image available'
                                 }
 

@@ -72,37 +72,43 @@
 
                                         @switch($app->status)
                                             @case('pending')
-                                                <span class="badge rounded-pill bg-warning text-dark px-3 py-2">
+                                                <span class="badge rounded-pill"
+                                                    style="background:#ffc107; color:#000; padding:6px 12px;">
                                                     Pending
                                                 </span>
                                             @break
 
                                             @case('approved')
-                                                <span class="badge rounded-pill bg-success px-3 py-2">
+                                                <span class="badge rounded-pill"
+                                                    style="background:#198754; color:#fff; padding:6px 12px;">
                                                     Approved
                                                 </span>
                                             @break
 
                                             @case('rescheduled')
-                                                <span class="badge rounded-pill bg-info px-3 py-2">
+                                                <span class="badge rounded-pill"
+                                                    style="background:#0dcaf0; color:#000; padding:6px 12px;">
                                                     Rescheduled
                                                 </span>
                                             @break
 
                                             @case('cancelled')
-                                                <span class="badge rounded-pill bg-dark px-3 py-2">
+                                                <span class="badge rounded-pill"
+                                                    style="background:#343a40; color:#fff; padding:6px 12px;">
                                                     Cancelled
                                                 </span>
                                             @break
 
                                             @case('completed')
-                                                <span class="badge rounded-pill bg-primary px-3 py-2">
+                                                <span class="badge rounded-pill"
+                                                    style="background:#0d6efd; color:#fff; padding:6px 12px;">
                                                     Completed
                                                 </span>
                                             @break
 
                                             @case('rejected')
-                                                <span class="badge rounded-pill bg-danger px-3 py-2">
+                                                <span class="badge rounded-pill"
+                                                    style="background:#dc3545; color:#fff; padding:6px 12px;">
                                                     Rejected
                                                 </span>
                                             @break

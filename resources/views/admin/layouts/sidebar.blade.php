@@ -2,7 +2,7 @@
 
     <div class="logo">
         <i class="fa-solid fa-paw"></i>
-        <span>VetCare</span>
+        <span menu-title>VetCare</span>
     </div>
 
     <ul class="menu">

@@ -12,15 +12,14 @@ return new class extends Migration {
     {
         Schema::create('vaccination', function (Blueprint $table) {
             $table->id();
-            $table->string('vaccine_name');
             $table->dateTime('date_given');
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->unsignedBigInteger('consultation_id');
+            $table->unsignedBigInteger('records_id');
             $table->unsignedBigInteger('medicine_id');
 
-            $table->foreign('consultation_id')->references('id')->on('consultation')->onDelete('cascade');
+            $table->foreign('records_id')->references('id')->on('medical_records')->onDelete('cascade');
             $table->foreign('medicine_id')->references('id')->on('medicine')->onDelete('cascade');
 
         });

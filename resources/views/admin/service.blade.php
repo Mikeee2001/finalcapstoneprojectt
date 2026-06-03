@@ -158,19 +158,19 @@
                         {{-- SERVICE NAME --}}
                         <div class="mb-3">
                             <label>Service Name</label>
-                            <input type="text" name="service_name" class="form-control" required>
+                            <input type="text" name="service_name" placeholder="Enter service name" class="form-control" required>
                         </div>
 
                         {{-- DESCRIPTION --}}
                         <div class="mb-3">
                             <label>Description</label>
-                            <textarea name="service_description" class="form-control"></textarea>
+                            <textarea name="service_description" placeholder="Enter service description" class="form-control"></textarea>
                         </div>
 
                         {{-- PRICE --}}
                         <div class="mb-3">
                             <label>Price</label>
-                            <input type="number" name="price" class="form-control" required>
+                            <input type="number" name="price" placeholder="Enter price" class="form-control" required>
                         </div>
 
                         {{-- CATEGORY (EXISTING + NEW) --}}
@@ -195,7 +195,7 @@
                         {{-- NEW CATEGORY INPUT --}}
                         <div class="mb-3 d-none" id="newCategoryDiv">
                             <label>New Category Name</label>
-                            <input type="text" name="new_category" class="form-control">
+                            <input type="text" name="new_category" placeholder="Enter new category name" class="form-control">
                         </div>
 
                         {{-- STATUS --}}

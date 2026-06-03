@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('batch_number')->nullable();
             $table->integer('stocks');
             $table->decimal('unit_cost', 10, 2);
+            $table->decimal('quantity', 10, 2);
             $table->date('expiration_date');
             $table->timestamps();
 

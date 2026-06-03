@@ -5,51 +5,74 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
 
     <style>
-        .appointment-card {
-            border: none;
-            border-radius: 15px;
+        .stat-card {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
         }
 
-        .appointment-header {
-            background: linear-gradient(135deg, #0d6efd, #0a58ca);
-            color: white;
-            padding: 20px;
+        .stat-card i {
+            position: absolute;
+            right: 20px;
+            bottom: 10px;
+            font-size: 60px;
+            opacity: .15;
         }
 
-        .appointment-container {
-            max-width: 1400px;
-            margin: auto;
+        .stat-card h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0;
         }
 
-        .table td,
-        .table th {
-            vertical-align: middle;
+        .stat-card span {
+            color: #64748b;
         }
 
-        .appointment-status {
-            min-width: 110px;
-            text-align: center;
-            font-size: 13px;
-            display: inline-block;
-            font-weight: 600;
+        .stat-blue {
+            border-left: 5px solid #2563eb;
         }
 
-        .card {
-            border-radius: 16px;
+        .stat-yellow {
+            border-left: 5px solid #f59e0b;
         }
 
-        .table tbody tr:hover {
-            background: #f8f9fa;
+        .stat-green {
+            border-left: 5px solid #16a34a;
+        }
+
+        .stat-teal {
+            border-left: 5px solid #14b8a6;
+        }
+
+        .search-box {
+            height: 50px;
+            border-radius: 12px;
         }
 
         .table td {
-            padding: 16px 12px;
+            padding: 18px;
+        }
+
+        .table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .dropdown {
+            position: static;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            z-index: 1055;
         }
     </style>
-
     <div class="container-fluid appointment-container py-4">
+
+
 
         <!-- TOGGLE BUTTONS (KEPT SAFE) -->
         <div class="mb-3 text-end">
@@ -57,163 +80,259 @@
             <button id="showCalendar" class="btn btn-success btn-sm">Calendar View</button>
         </div>
 
-        <!-- ================= TABLE VIEW (YOUR ORIGINAL CODE KEPT) ================= -->
-        <div id="tableView">
+        <!-- ================= TABLE VIEW  ================= -->
 
-            <div class="card border-0 shadow rounded-4 overflow-hidden">
+        <!-- TOP STATS -->
+        <div class="row g-3 mb-4">
 
-                <div class="bg-primary text-white p-3 d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">
-                        <i class="fa-solid fa-calendar-check me-2"></i>
-                        Appointment Management
-                    </h4>
-
-                    <span class="badge bg-light text-primary px-3 py-2">
-                        {{ $appointments->total() }} Appointments
-                    </span>
+            <div class="col-md-3">
+                <div class="stat-card stat-blue">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <h3>{{ $appointments->total() }}</h3>
+                    <span>Total Appointments</span>
                 </div>
+            </div>
 
-                <div class="card-body p-0">
+            <div class="col-md-3">
+                <div class="stat-card stat-yellow">
+                    <i class="fa-solid fa-clock"></i>
+                    <h3>{{ $pendingCount }}</h3>
+                    <span>Pending</span>
+                </div>
+            </div>
 
-                    <div class="table-responsive">
+            <div class="col-md-3">
+                <div class="stat-card stat-green">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <h3>{{ $approvedCount }}</h3>
+                    <span>Approved</span>
+                </div>
+            </div>
 
-                        <table class="table align-middle mb-0">
+            <div class="col-md-3">
+                <div class="stat-card stat-teal">
+                    <i class="fa-solid fa-stethoscope"></i>
+                    <h3>{{ $completedCount }}</h3>
+                    <span>Completed</span>
+                </div>
+            </div>
 
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Pet</th>
-                                    <th>Owner</th>
-                                    <th>Service</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th>Assigned Vet</th>
-                                    <th>Status</th>
-                                    <th width="220">Action</th>
-                                </tr>
-                            </thead>
+        </div>
 
-                            <tbody>
+        <!-- SEARCH + FILTER -->
+        <div class="row mb-4">
 
-                                @forelse($appointments as $appointment)
-                                    <tr>
+            <div class="col-md-8">
+                <input type="text" class="form-control search-box" placeholder="Search pet, owner, service...">
+            </div>
 
-                                        <td>
-                                            <strong>
-                                                {{ $appointment->pets->pet_name ?? 'N/A' }}
-                                            </strong>
-                                        </td>
+            <div class="col-md-4">
+                <select class="form-select">
+                    <option>All Status</option>
+                    <option>Pending</option>
+                    <option>Approved</option>
+                    <option>Completed</option>
+                    <option>Cancelled</option>
+                </select>
+            </div>
 
-                                        <td>
-                                            {{ $appointment->pets->user->fullname ?? 'N/A' }}
-                                        </td>
+        </div>
 
-                                        <td>
-                                            <span class="text-primary fw-semibold">
-                                                {{ $appointment->service->service_name ?? 'N/A' }}
-                                            </span>
-                                        </td>
+        <!-- TABLE CARD -->
+        <div class="card shadow-sm border-0 rounded-4">
 
-                                        <td>
-                                            <i class="fa-solid fa-calendar-days text-secondary me-1"></i>
-                                            {{ \Carbon\Carbon::parse($appointment->requested_date)->format('M d, Y') }}
-                                        </td>
+            <div class="card-header bg-white border-0 py-3">
 
-                                        <td>
-                                            <i class="fa-solid fa-clock text-secondary me-1"></i>
-                                            {{ \Carbon\Carbon::parse($appointment->requested_time)->format('g:i A') }}
-                                        </td>
+                <h5 class="mb-0">
+                    <i class="fa-solid fa-calendar-check text-primary"></i>
+                    Appointment Management
+                </h5>
 
-                                        <td>
-                                            {{ $appointment->vets->fullname ?? 'Not Assigned' }}
-                                        </td>
+            </div>
 
-                                        <td>
+            <div class="table-responsive">
 
+                <table class="table align-middle mb-0">
+
+
+                    <thead>
+                        <tr>
+                            <th>Pet</th>
+                            <th>Service</th>
+                            <th>Date & Time</th>
+                            <th>Veterinarian</th>
+                            <th>Status</th>
+                            <th width="180">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach ($appointments as $appointment)
+                            <tr>
+
+                                <td>
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="pet-avatar me-3">
+                                            <i class="fa-solid fa-paw"></i>
+                                        </div>
+
+                                        <div>
+                                            <div class="fw-bold">
+                                                {{ $appointment->pets->pet_name }}
+                                            </div>
+
+                                            <small class="text-muted">
+                                                {{ $appointment->pets->user->fullname }}
+                                            </small>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <td>
+                                    {{ $appointment->service->service_name }}
+                                </td>
+
+                                <td>
+                                    <div>
+                                        {{ Carbon\Carbon::parse($appointment->appointment_date ?? $appointment->requested_date)->format('M d, Y') }}
+                                    </div>
+
+                                    <small class="text-muted">
+                                        {{ Carbon\Carbon::parse($appointment->appointment_time ?? $appointment->requested_time)->format('h:i A') }}
+                                    </small>
+                                </td>
+
+                                <td>
+
+                                    @if ($appointment->vets)
+                                        <span class="vet-badge">
+
+                                            <i class="fa-solid fa-user-doctor me-1"></i>
+
+                                            {{ $appointment->vets->user->fullname }}
+
+                                        </span>
+                                    @else
+                                        <span class="badge bg-secondary">
+                                            Not Assigned
+                                        </span>
+                                    @endif
+
+                                </td>
+
+                                <td class="status-cell">
+                                    @if ($appointment->status == 'pending')
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    @elseif($appointment->status == 'approved')
+                                        <span class="badge bg-success">Approved</span>
+                                    @elseif($appointment->status == 'completed')
+                                        <span class="badge bg-primary">Completed</span>
+                                    @elseif($appointment->status == 'cancelled')
+                                        <span class="badge bg-danger">Cancelled</span>
+                                    @elseif($appointment->status == 'rescheduled')
+                                        <span class="badge bg-secondary">Rescheduled</span>
+                                    @endif
+                                </td>
+
+                                <td class="action-cell">
+
+                                    <div class="dropdown">
+
+                                        <button class="btn btn-light border" data-bs-toggle="dropdown">
+                                            <i class="fa-solid fa-ellipsis"></i>
+                                        </button>
+
+                                        <ul class="dropdown-menu dropdown-menu-end">
+
+                                            {{-- PENDING --}}
                                             @if ($appointment->status == 'pending')
-                                                <span
-                                                    class="badge rounded-pill appointment-status bg-warning text-dark px-3 py-2">
-                                                    Pending
-                                                </span>
+                                                <li>
+                                                    <a class="dropdown-item update-status" data-id="{{ $appointment->id }}"
+                                                        data-status="approved">
+                                                        <i class="fa-solid fa-check me-2"></i>
+                                                        Approve
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item update-status" data-id="{{ $appointment->id }}"
+                                                        data-status="cancelled">
+                                                        <i class="fa-solid fa-xmark me-2"></i>
+                                                        Cancel
+                                                    </a>
+                                                </li>
+
+                                                {{-- APPROVED --}}
                                             @elseif($appointment->status == 'approved')
-                                                <span class="badge rounded-pill appointment-status bg-info px-3 py-2">
-                                                    Approved
-                                                </span>
-                                            @elseif($appointment->status == 'completed')
-                                                <span class="badge rounded-pill appointment-status bg-primary px-3 py-2">
-                                                    Completed
-                                                </span>
-                                            @elseif($appointment->status == 'cancelled')
-                                                <span class="badge rounded-pill appointment-status bg-dark px-3 py-2">
-                                                    Cancelled
-                                                </span>
+                                                <li>
+                                                    <a class="dropdown-item update-status" data-id="{{ $appointment->id }}"
+                                                        data-status="completed">
+                                                        <i class="fa-solid fa-circle-check me-2"></i>
+                                                        Complete
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item reschedule-btn"
+                                                        data-id="{{ $appointment->id }}">
+                                                        <i class="fa-solid fa-calendar-days me-2"></i>
+                                                        Reschedule
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item assign-vet-btn"
+                                                        data-id="{{ $appointment->id }}">
+                                                        <i class="fa-solid fa-user-doctor me-2"></i>
+                                                        Assign Vet
+                                                    </a>
+                                                </li>
+
+                                                {{-- RESCHEDULED --}}
                                             @elseif($appointment->status == 'rescheduled')
-                                                <span class="badge rounded-pill appointment-status bg-secondary px-3 py-2">
-                                                    Rescheduled
-                                                </span>
+                                                <li>
+                                                    <a class="dropdown-item update-status" data-id="{{ $appointment->id }}"
+                                                        data-status="completed">
+                                                        <i class="fa-solid fa-circle-check me-2"></i>
+                                                        Complete
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item assign-vet-btn"
+                                                        data-id="{{ $appointment->id }}">
+                                                        <i class="fa-solid fa-user-doctor me-2"></i>
+                                                        Assign Vet
+                                                    </a>
+                                                </li>
                                             @endif
 
-                                        </td>
+                                        </ul>
 
-                                        <td>
+                                    </div>
 
-                                            @if ($appointment->status == 'pending')
-                                                <button class="btn btn-success btn-sm update-status"
-                                                    data-id="{{ $appointment->id }}" data-status="approved">
-                                                    Approve
-                                                </button>
+                                </td>
 
-                                                <button class="btn btn-danger btn-sm update-status"
-                                                    data-id="{{ $appointment->id }}" data-status="cancelled">
-                                                    Cancel
-                                                </button>
-                                            @elseif($appointment->status == 'approved')
-                                                <button class="btn btn-primary btn-sm update-status"
-                                                    data-id="{{ $appointment->id }}" data-status="completed">
-                                                    Complete
-                                                </button>
+                            </tr>
+                        @endforeach
 
-                                                <button class="btn btn-warning btn-sm reschedule-btn"
-                                                    data-id="{{ $appointment->id }}">
-                                                    Reschedule
-                                                </button>
-                                            @elseif($appointment->status == 'completed')
-                                                <span class="badge bg-success">
-                                                    Finished
-                                                </span>
-                                            @elseif($appointment->status == 'cancelled')
-                                                <span class="badge bg-danger">
-                                                    Cancelled
-                                                </span>
-                                            @endif
+                    </tbody>
 
-                                        </td>
 
-                                    </tr>
+                </table>
 
-                                @empty
-
-                                    <tr>
-                                        <td colspan="8" class="text-center py-4">
-                                            No appointments found.
-                                        </td>
-                                    </tr>
-                                @endforelse
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                    <div class="p-3">
-                        {{ $appointments->links() }}
-                    </div>
-
+                <div class="card-footer bg-white border-0 d-flex justify-content-end">
+                    {{ $appointments->links() }}
                 </div>
 
             </div>
 
         </div>
+
+        {{-- RESCHEDULE MODAL (ADDED ONLY - NO DELETION) --}}
         <div class="modal fade" id="rescheduleModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -264,7 +383,7 @@
             </div>
         </div>
 
-        <!-- ================= CALENDAR VIEW (ADDED ONLY - NO DELETION) ================= -->
+        <!-- ================= CALENDAR VIEW ================= -->
         <div id="calendarView" style="display:none;">
             <div class="card mt-3 shadow-sm">
                 <div class="card-body">
@@ -275,7 +394,7 @@
 
     </div>
 
-    <!-- ================= YOUR EXISTING MODALS (UNCHANGED) ================= -->
+    <!-- ================= YOUR EXISTING MODALS ================= -->
     <div class="modal fade" id="assignVetModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -285,57 +404,192 @@
                 </div>
 
                 <div class="modal-body">
+
                     <input type="hidden" id="appointment_id">
 
                     <select id="vet_id" class="form-select">
+                        <option value="">Select Veterinarian</option>
+
                         @foreach ($vets as $vet)
-                            <option value="{{ $vet->id }}">{{ $vet->fullname }}</option>
+                            <option value="{{ $vet->id }}">
+                                {{ $vet->user->fullname }}
+                            </option>
                         @endforeach
                     </select>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="assignVetBtn">
+                        Assign
+                    </button>
                 </div>
 
             </div>
         </div>
     </div>
 
-    <!-- ================= YOUR EXISTING SCRIPTS (NOT REMOVED) ================= -->
+    <!-- ================= YOUR EXISTING SCRIPTS ================= -->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- YOUR STATUS + RESCHEDULE SCRIPTS ARE STILL HERE -->
     <script>
-        $(document).on('click', '.update-status', function() {
+        $(document).ready(function() {
+
+            let calendarEl = document.getElementById('calendar');
+
+            window.calendar = new FullCalendar.Calendar(calendarEl, {
+
+                initialView: 'timeGridWeek',
+                height: 750,
+
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+
+                events: '/admin/appointments/calendar',
+
+                eventContent: function(arg) {
+                    return {
+                        html: `
+                    <div style="font-size:11px">
+                        <div><strong>${arg.event.title}</strong></div>
+                        <div>${arg.event.extendedProps.owner}</div>
+                        <div>${arg.event.extendedProps.vet}</div>
+                    </div>
+                `
+                    };
+                },
+
+                dateClick: function(info) {
+                    window.calendar.changeView('timeGridDay', info.dateStr);
+                },
+
+                eventClick: function(info) {
+
+                    $('#appointment_id').val(info.event.id);
+
+                    $('#assignVetModal').modal('show');
+
+                }
+
+            });
+
+            window.calendar.render();
+
+
+            // ===============================
+            // VIEW TOGGLE
+            // ===============================
+
+            $('#showCalendar').click(function() {
+
+                $('#tableView').hide();
+                $('#calendarView').show();
+
+                setTimeout(() => {
+                    window.calendar.updateSize();
+                }, 100);
+
+            });
+
+            $('#showTable').click(function() {
+
+                $('#calendarView').hide();
+                $('#tableView').show();
+
+            });
+
+        });
+
+
+        // ===============================
+        // RELOAD CALENDAR (SAFE VERSION)
+        // ===============================
+        window.reloadCalendar = function() {
+
+            if (!window.calendar) return;
+
+            $.ajax({
+                url: '/admin/appointments/calendar-data',
+                type: 'GET',
+                success: function(events) {
+
+                    window.calendar.removeAllEvents();
+                    window.calendar.addEventSource(events);
+
+                }
+            });
+
+        };
+
+
+        // ===============================
+        // UPDATE STATUS
+        // ===============================
+        $(document).on('click', '.update-status', function(e) {
+
+            e.preventDefault();
 
             let appointmentId = $(this).data('id');
             let status = $(this).data('status');
 
             $.ajax({
+
                 url: '/admin/appointments/' + appointmentId + '/status',
+
                 type: 'POST',
+
                 data: {
                     _token: '{{ csrf_token() }}',
                     status: status
                 },
+
                 success: function(response) {
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
                         text: response.message
+                    }).then(() => {
+
+                        location.reload();
+
                     });
+
+                },
+
+                error: function(xhr) {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: xhr.responseJSON?.message ||
+                            'Unable to update appointment status.'
+                    });
+
                 }
+
             });
 
         });
-    </script>
 
-    <script>
+        // ===============================
+        // RESCHEDULE SAVE
+        // ===============================
         $('#saveReschedule').click(function() {
 
             let id = $('#reschedule_id').val();
 
             $.ajax({
+
                 url: '/admin/appointments/' + id + '/reschedule',
+
                 type: 'POST',
+
                 data: {
                     _token: '{{ csrf_token() }}',
                     appointment_date: $('#appointment_date').val(),
@@ -351,7 +605,9 @@
                         title: 'Success',
                         text: response.message
                     }).then(() => {
+
                         location.reload();
+
                     });
 
                 },
@@ -361,88 +617,86 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: xhr.responseJSON?.message ??
+                        text: xhr.responseJSON?.message ||
                             'Unable to reschedule appointment.'
                     });
 
                 }
+
             });
 
         });
-    </script>
 
-    <script>
-        $(document).on('click', '.reschedule-btn', function() {
-            let id = $(this).data('id');
-            $('#reschedule_id').val(id);
-            $('#rescheduleModal').modal('show');
-        });
-    </script>
+        // ===============================
+        // ASSIGN VETERINARIAN
+        // ===============================
+        $('#assignVetBtn').click(function() {
 
-    <!-- ================= FULLCALENDAR (ADDED ONLY) ================= -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+            $.ajax({
 
-            let calendarEl = document.getElementById('calendar');
+                url: '/admin/appointments/assign-vet',
 
-            let calendar = new FullCalendar.Calendar(calendarEl, {
+                type: 'POST',
 
-                initialView: 'timeGridWeek',
-                height: 750,
-
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    appointment_id: $('#appointment_id').val(),
+                    vet_id: $('#vet_id').val()
                 },
 
-                events: [
+                success: function(response) {
 
-                    @foreach ($calendarAppointments as $appointment)
+                    $('#assignVetModal').modal('hide');
 
-                        {
-                            id: '{{ $appointment->id }}',
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message
+                    }).then(() => {
 
-                            title: '{{ $appointment->pets->pet_name ?? 'No Pet' }}',
+                        location.reload();
 
-                            start: '{{ $appointment->requested_date }}T{{ $appointment->requested_time }}',
+                    });
 
-                            color: '{{ $statusColors[$appointment->status] ?? '#6c757d' }}',
-
-                            extendedProps: {
-                                owner: '{{ $appointment->pets->user->fullname ?? 'N/A' }}',
-                                service: '{{ $appointment->service->service_name ?? 'N/A' }}',
-                                status: '{{ ucfirst($appointment->status) }}'
-                            }
-                        },
-                    @endforeach
-
-                ],
-
-                dateClick: function(info) {
-                    calendar.changeView('timeGridDay', info.dateStr);
                 },
 
-                eventClick: function(info) {
-                    $('#appointment_id').val(info.event.id);
-                    $('#assignVetModal').modal('show');
+                error: function() {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Unable to assign veterinarian.'
+                    });
+
                 }
 
             });
 
-            calendar.render();
+        });
 
-            // TOGGLE VIEW (SAFE - ADDED ONLY)
-            $('#showCalendar').click(function() {
-                $('#tableView').hide();
-                $('#calendarView').show();
-                setTimeout(() => calendar.updateSize(), 100);
-            });
+        // ===============================
+        // OPEN RESCHEDULE MODAL
+        // ===============================
+        $(document).on('click', '.reschedule-btn', function() {
 
-            $('#showTable').click(function() {
-                $('#calendarView').hide();
-                $('#tableView').show();
-            });
+            let id = $(this).data('id');
+
+            $('#reschedule_id').val(id);
+
+            $('#rescheduleModal').modal('show');
+
+        });
+
+        // ===============================
+        // OPEN ASSIGN VET MODAL
+        // ===============================
+        $(document).on('click', '.assign-vet-btn', function() {
+
+            let appointmentId = $(this).data('id');
+
+            $('#appointment_id').val(appointmentId);
+
+            $('#assignVetModal').modal('show');
 
         });
     </script>

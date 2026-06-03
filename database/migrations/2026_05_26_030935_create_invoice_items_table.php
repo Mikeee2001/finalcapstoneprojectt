@@ -30,10 +30,6 @@ return new class extends Migration {
                 ->constrained('invoices')
                 ->cascadeOnDelete();
 
-            $table->foreignId('appointment_id')
-                ->constrained('appointments')
-                ->cascadeOnDelete();
-
             $table->timestamps();
 
         });

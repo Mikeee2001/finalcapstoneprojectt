@@ -484,6 +484,12 @@ class AdminController extends Controller
             'service',
         ])->get();
 
+        // Dashboard Counts
+        $pendingCount = Appointments::where('status', 'pending')->count();
+        $approvedCount = Appointments::where('status', 'approved')->count();
+        $completedCount = Appointments::where('status', 'completed')->count();
+        $cancelledCount = Appointments::where('status', 'cancelled')->count();
+
         $statusColors = [
             'pending' => '#ffc107',
             'approved' => '#198754',
@@ -492,13 +498,82 @@ class AdminController extends Controller
             'rescheduled' => '#0dcaf0',
         ];
 
-        $vets = Vet::all();
+        $vets = Vet::with('user')
+            ->where('status', 'available')
+            ->get();
 
         return view('admin.appointments', compact(
             'appointments',
             'calendarAppointments',
             'vets',
-            'statusColors'
+            'statusColors',
+            'pendingCount',
+            'approvedCount',
+            'completedCount',
+            'cancelledCount'
         ));
     }
+
+    public function calendarData()
+    {
+        $appointments = Appointments::with([
+            'pets.user',
+            'vets'
+        ])->get();
+
+        $statusColors = [
+            'pending' => '#ffc107', // warning
+            'approved' => '#0d6efd', // primary
+            'completed' => '#198754', // success
+            'cancelled' => '#dc3545', // danger
+            'rescheduled' => '#6c757d', // secondary
+        ];
+
+        $events = $appointments->map(function ($appointment) use ($statusColors) {
+
+            $date = $appointment->appointment_date ?? $appointment->requested_date;
+            $time = $appointment->appointment_time ?? $appointment->requested_time;
+
+            return [
+                'id' => $appointment->id,
+
+                'title' => $appointment->pets->pet_name ?? 'No Pet',
+
+                'start' => $date . 'T' . $time,
+
+                'backgroundColor' => $statusColors[$appointment->status] ?? '#6c757d',
+                'borderColor' => $statusColors[$appointment->status] ?? '#6c757d',
+                'textColor' => '#ffffff',
+
+                'extendedProps' => [
+                    'owner' => $appointment->pets->user->fullname ?? 'No Owner',
+                    'vet' => $appointment->vets->fullname ?? 'Unassigned',
+                    'status' => $appointment->status,
+                ]
+            ];
+        });
+
+        return response()->json($events);
+    }
+
+    public function assignVet(Request $request)
+    {
+        $request->validate([
+            'appointment_id' => 'required|exists:appointments,id',
+            'vet_id' => 'required|exists:veterinarian,id',
+        ]);
+
+        $appointment = Appointments::findOrFail(
+            $request->appointment_id
+        );
+
+        $appointment->vet_id = $request->vet_id;
+        $appointment->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Veterinarian assigned successfully.'
+        ]);
+    }
+
 }

@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('consultation', function (Blueprint $table) {
+        Schema::create('medical_records', function (Blueprint $table) {
             $table->id();
             $table->text('diagnosis');
             $table->text('symptoms');
@@ -18,10 +18,8 @@ return new class extends Migration {
             $table->text('treatment');
             $table->timestamps();
 
-            $table->unsignedBigInteger('vet_id');
             $table->unsignedBigInteger('appointment_id');
 
-            $table->foreign('vet_id')->references('id')->on('veterinarian')->onDelete('cascade');
             $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
 
         });
@@ -32,6 +30,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('consultation');
+        Schema::dropIfExists('medical_records');
     }
 };

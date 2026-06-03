@@ -88,9 +88,7 @@
                             <small style="color:red;">{{ $message }}</small>
                         @enderror
 
-                        <span class="toggle-eye" onclick="togglePassword()">
-                            <i class="fa-solid fa-eye" id="eyeIcon"></i>
-                        </span>
+
                     </div>
                 </div>
 

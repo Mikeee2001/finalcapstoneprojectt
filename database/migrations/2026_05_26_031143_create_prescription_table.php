@@ -19,10 +19,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unsignedBigInteger('consultation_id');
-            $table->unsignedBigInteger('veterinarian_id');
 
-            $table->foreign('consultation_id')->references('id')->on('consultation')->onDelete('cascade');
-            $table->foreign('veterinarian_id')->references('id')->on('veterinarian')->onDelete('cascade');
+            $table->foreign('consultation_id')->references('id')->on('medical_records')->onDelete('cascade');
 
         });
     }
