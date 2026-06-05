@@ -12,15 +12,11 @@ return new class extends Migration {
     {
         Schema::create('invoice_items', function (Blueprint $table) {
             $table->id();
-            $table->string('source_type');
-            $table->string('item_name');
 
             $table->integer('quantity');
-
             $table->decimal('unit_price', 10, 2);
-
             $table->decimal('subtotal', 10, 2);
-
+            
             $table->foreignId('service_id')
                 ->nullable()
                 ->constrained('services')
@@ -29,6 +25,11 @@ return new class extends Migration {
             $table->foreignId('invoice_id')
                 ->constrained('invoices')
                 ->cascadeOnDelete();
+
+            $table->foreignId('medicine_id')
+                ->nullable()
+                ->constrained('medicine')
+                ->nullOnDelete();
 
             $table->timestamps();
 

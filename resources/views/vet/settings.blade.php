@@ -1,165 +1,239 @@
 @extends('layout.app')
 
 @section('content')
-    <div class="container-fluid">
+    <div class="row">
 
-        <div class="card shadow border-0 rounded-4">
+        @php
+            $vet = auth()->user()->vet;
+        @endphp
 
-            <!-- HEADER -->
-            <div class="card-header bg-success text-white py-3 rounded-top-4">
+        <!-- LEFT PROFILE CARD -->
+        <div class="col-lg-3 mb-4">
 
-                <h4 class="mb-0 fw-bold">
-                    <i class="fa-solid fa-user-doctor me-2"></i>
-                    Vet Settings
-                </h4>
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body text-center">
+
+                    @if ($vet && $vet->image)
+                        <div class="d-flex justify-content-center mb-3">
+                            <img src="{{ asset('storage/' . $vet->image) }}" class="rounded-circle border shadow-sm"
+                                width="140" height="140" style="object-fit: cover;">
+                        </div>
+                    @else
+                        <div class="d-flex justify-content-center mb-3">
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center"
+                                style="width:140px;height:140px;">
+                                <i class="fa-solid fa-user-doctor fa-4x text-secondary"></i>
+                            </div>
+                        </div>
+                    @endif
+
+                    <h5 class="fw-bold mb-1">
+                        {{ auth()->user()->fullname }}
+                    </h5>
+
+                    <p class="text-muted small mb-3">
+                        {{ auth()->user()->email }}
+                    </p>
+
+                    @if ($vet)
+                        <span class="badge bg-primary px-3 py-2">
+                            {{ ucfirst($vet->status) }}
+                        </span>
+                    @endif
+
+                </div>
 
             </div>
 
-            <div class="card-body p-4">
+        </div>
 
-                <!-- TABS -->
-                <ul class="nav nav-pills mb-4">
+        <!-- RIGHT SETTINGS -->
+        <div class="col-lg-9">
 
-                    <li class="nav-item me-2">
+            <div class="card border-0 shadow-sm rounded-4">
 
-                        <button class="nav-link active rounded-pill px-4" data-bs-toggle="tab" data-bs-target="#profileTab">
+                <div class="card-body">
 
-                            <i class="fa-solid fa-user me-2"></i>
-                            Profile
+                    <!-- TABS -->
+                    <ul class="nav nav-tabs mb-4">
 
-                        </button>
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profileTab"
+                                type="button">
+                                <i class="fa-solid fa-user me-2"></i>
+                                Profile
+                            </button>
+                        </li>
 
-                    </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#detailsTab" type="button">
+                                <i class="fa-solid fa-circle-info me-2"></i>
+                                Details
+                            </button>
+                        </li>
 
-                    <li class="nav-item">
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#passwordTab" type="button">
+                                <i class="fa-solid fa-lock me-2"></i>
+                                Password
+                            </button>
+                        </li>
 
-                        <button class="nav-link rounded-pill px-4" data-bs-toggle="tab" data-bs-target="#passwordTab">
+                    </ul>
 
-                            <i class="fa-solid fa-lock me-2"></i>
-                            Password
+                    <!-- TAB CONTENT -->
+                    <div class="tab-content">
 
-                        </button>
+                        <!-- PROFILE TAB -->
+                        <div class="tab-pane fade show active" id="profileTab">
 
-                    </li>
+                            <div class="card bg-light border-0">
+                                <div class="card-body">
 
-                </ul>
+                                    <h5 class="fw-bold mb-4">
+                                        Profile Information
+                                    </h5>
 
-                <!-- TAB CONTENT -->
-                <div class="tab-content">
+                                    <form id="vetProfileForm">
+                                        @csrf
 
-                    <!-- ========================= -->
-                    <!-- PROFILE TAB -->
-                    <!-- ========================= -->
+                                        <div class="row">
 
-                    <div class="tab-pane fade show active" id="profileTab">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold">
+                                                    Full Name
+                                                </label>
 
-                        <form id="vetProfileForm">
+                                                <input type="text" name="fullname" class="form-control"
+                                                    value="{{ auth()->user()->fullname }}">
+                                            </div>
 
-                            @csrf
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold">
+                                                    Email Address
+                                                </label>
 
-                            <div class="row">
+                                                <input type="email" name="email" class="form-control"
+                                                    value="{{ auth()->user()->email }}">
+                                            </div>
 
-                                <!-- FULLNAME -->
-                                <div class="col-md-6 mb-3">
+                                        </div>
 
-                                    <label class="fw-bold mb-2">
-                                        Full Name
-                                    </label>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa-solid fa-floppy-disk me-2"></i>
+                                            Update Profile
+                                        </button>
 
-                                    <input type="text" name="fullname" class="form-control rounded-pill"
-                                        value="{{ auth()->user()->fullname }}">
+                                    </form>
 
                                 </div>
+                            </div>
 
-                                <!-- EMAIL -->
-                                <div class="col-md-6 mb-3">
+                        </div>
 
-                                    <label class="fw-bold mb-2">
-                                        Email Address
-                                    </label>
+                        <!-- DETAILS TAB -->
+                        <div class="tab-pane fade" id="detailsTab">
 
-                                    <input type="email" name="email" class="form-control rounded-pill"
-                                        value="{{ auth()->user()->email }}">
+                            <h5 class="fw-bold mb-4">
+                                Professional Details
+                            </h5>
 
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+                                    <div class="card border">
+                                        <div class="card-body">
+                                            <small class="text-muted">
+                                                License Number
+                                            </small>
+
+                                            <h6 class="fw-bold mt-2 mb-0">
+                                                {{ $vet->license_number ?? 'Not Set' }}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="card border">
+                                        <div class="card-body">
+                                            <small class="text-muted">
+                                                Hire Date
+                                            </small>
+
+                                            <h6 class="fw-bold mt-2 mb-0">
+                                                {{ $vet && $vet->hire_date ? \Carbon\Carbon::parse($vet->hire_date)->format('F d, Y') : 'Not Set' }}
+                                            </h6>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
 
-                            <button type="submit" class="btn btn-success rounded-pill px-5 py-2 mt-3">
+                        </div>
 
-                                <i class="fa-solid fa-floppy-disk me-2"></i>
-                                Update Profile
+                        <!-- PASSWORD TAB -->
+                        <div class="tab-pane fade" id="passwordTab">
 
-                            </button>
+                            <div class="card bg-light border-0">
+                                <div class="card-body">
 
-                        </form>
+                                    <h5 class="fw-bold mb-4">
+                                        Change Password
+                                    </h5>
 
-                    </div>
+                                    <form id="passwordForm">
+                                        @csrf
 
-                    <!-- ========================= -->
-                    <!-- PASSWORD TAB -->
-                    <!-- ========================= -->
+                                        <div class="row">
 
-                    <div class="tab-pane fade" id="passwordTab">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold">
+                                                    Current Password
+                                                </label>
 
-                        <form id="passwordForm">
+                                                <input type="password" name="current_password" class="form-control"
+                                                    placeholder="Enter current password">
+                                            </div>
 
-                            @csrf
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold">
+                                                    New Password
+                                                </label>
 
-                            <div class="row">
+                                                <input type="password" name="new_password" class="form-control"
+                                                    placeholder="Enter new password">
+                                            </div>
 
-                                <!-- CURRENT PASSWORD -->
-                                <div class="col-md-6 mb-3">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-semibold">
+                                                    Confirm Password
+                                                </label>
 
-                                    <label class="fw-bold mb-2">
-                                        Current Password
-                                    </label>
+                                                <input type="password" name="new_password_confirmation" class="form-control"
+                                                    placeholder="Confirm password">
+                                            </div>
 
-                                    <input type="password" name="current_password" class="form-control rounded-pill"
-                                        placeholder="Enter current password">
+                                        </div>
+
+                                        <ul id="errorList" class="text-danger mt-2 d-none">
+                                        </ul>
+
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fa-solid fa-key me-2"></i>
+                                            Change Password
+                                        </button>
+
+                                    </form>
 
                                 </div>
-
-                                <!-- NEW PASSWORD -->
-                                <div class="col-md-6 mb-3">
-
-                                    <label class="fw-bold mb-2">
-                                        New Password
-                                    </label>
-
-                                    <input type="password" name="new_password" class="form-control rounded-pill"
-                                        placeholder="Enter new password">
-
-                                </div>
-
-                                <!-- CONFIRM PASSWORD -->
-                                <div class="col-md-6 mb-3">
-
-                                    <label class="fw-bold mb-2">
-                                        Confirm Password
-                                    </label>
-
-                                    <input type="password" name="new_password_confirmation"
-                                        class="form-control rounded-pill" placeholder="Confirm password">
-
-                                </div>
-
                             </div>
 
-                            <!-- ERROR LIST -->
-                            <ul id="errorList" class="text-danger mt-2 d-none">
-                            </ul>
-
-                            <button type="submit" class="btn btn-danger rounded-pill px-5 py-2 mt-3">
-
-                                <i class="fa-solid fa-key me-2"></i>
-                                Change Password
-
-                            </button>
-
-                        </form>
+                        </div>
 
                     </div>
+                    <!-- END TAB CONTENT -->
 
                 </div>
 

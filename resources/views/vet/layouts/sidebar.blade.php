@@ -1,7 +1,7 @@
 <aside class="sidebar">
 
     <!-- LOGO -->
-    <div class="logo">
+    <div class="logo menu-link">
 
         <i class="fa-solid fa-user-doctor"></i>
         <span>VetCare</span>
@@ -24,7 +24,7 @@
         <!-- APPOINTMENTS -->
         <li>
 
-            <a href="#" class="menu-link #">
+            <a href="{{route('vet.appointment')}}"  class="menu-link {{ request()->routeIs('vet.appointment') ? 'active' : '' }}">
                 <i class="fa-solid fa-calendar-check"></i>
                 <span>Appointments</span>
             </a>
@@ -44,7 +44,8 @@
         <!-- MEDICAL RECORDS -->
         <li>
 
-            <a href="#" class="menu-link">
+            <a href="{{route('vet.medical.records')}}"
+            class="menu-link {{ request()->routeIs('vet.medical.records') ? 'active' : '' }}">
                 <i class="fa-solid fa-file-medical"></i>
                 <span>Medical Records</span>
             </a>

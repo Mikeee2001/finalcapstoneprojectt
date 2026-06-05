@@ -19,8 +19,14 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->unsignedBigInteger('appointment_id');
+            $table->unsignedBigInteger('pet_id');
+            $table->unsignedBigInteger('vet_id');
+
 
             $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
+            $table->foreign('pet_id')->references('id')->on('pets')->onDelete('cascade');
+            $table->foreign('vet_id')->references('id')->on('veterinarian')->onDelete('cascade');
+
 
         });
     }

@@ -18,9 +18,9 @@ return new class extends Migration {
             $table->decimal('price', 8, 2);
             $table->enum('status', ['active', 'inactive'])->default('active');
 
-            $table->foreignId('category_id')
-                ->constrained('category')
-                ->cascadeOnDelete();
+            // $table->foreignId('category_id')
+            //     ->constrained('category')
+            //     ->cascadeOnDelete();
 
             $table->timestamps();
         });

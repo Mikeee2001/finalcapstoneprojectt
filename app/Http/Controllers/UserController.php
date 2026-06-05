@@ -24,6 +24,19 @@ class UserController extends Controller
         return view('user.settings');
     }
 
+     public function latestCheck()
+    {
+        $latest = Appointments::latest()->first();
+
+        $lastSeen = session('last_appointment_id');
+
+        session(['last_appointment_id' => $latest->id ?? null]);
+
+        return response()->json([
+            'hasNew' => $lastSeen !== $latest->id
+        ]);
+    }
+
     public function updateUser(Request $request)
     {
         $user = auth()->user();
@@ -230,7 +243,7 @@ class UserController extends Controller
                 new AppointmentNotification([
                     'user' => auth()->user()->fullname,
                     'action' => 'New Appointment',
-                    'message' => auth()->user()->name . ' submitted an appointment request.'
+                    'message' => auth()->user()->fullname . ' submitted an appointment request.'
                 ])
             );
             event(new NotificationCreated(
@@ -252,7 +265,7 @@ class UserController extends Controller
 
     public function getAppointmentList()
     {
-        $appointments = Appointments::with(['pets', 'service'])
+        $appointments = Appointments::with(['pets', 'service', 'vets'])
             ->whereHas('pets', function ($query) {
                 $query->where('user_id', auth()->id());
             })

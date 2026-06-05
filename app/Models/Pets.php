@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Appointments;
 use App\Models\Breeds;
+use App\Models\MedicalRecords;
 use App\Models\Species;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -38,8 +39,17 @@ class Pets extends Model
         return $this->belongsTo(Species::class, 'species_id');
     }
 
-    public function appoinments()
+    public function appointments()
     {
         return $this->hasMany(Appointments::class, 'pet_id');
+    }
+
+    public function medicalRecords()
+    {
+        return $this->hasMany(
+            MedicalRecords::class,
+            'pet_id',
+            'id'
+        );
     }
 }

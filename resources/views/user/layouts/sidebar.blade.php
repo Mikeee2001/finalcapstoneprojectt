@@ -1,7 +1,7 @@
 <aside class="sidebar">
 
     <!-- LOGO -->
-    <div class="logo">
+    <div class="logo  menu-link">
         <i class="fa-solid fa-paw"></i>
         <span>VetCare</span>
     </div>

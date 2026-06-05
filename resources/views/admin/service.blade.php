@@ -47,7 +47,7 @@
             <div class="bg-primary text-white px-4 py-3 d-flex justify-content-between align-items-center">
                 <div class="fw-bold">Service List</div>
                 <div class="small text-white-50">
-                    Total: {{ $services->total() }} services
+                    Total: {{ $services->count() }} services
                 </div>
             </div>
 
@@ -58,7 +58,6 @@
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>Category</th>
                             <th>Service</th>
                             <th>Description</th>
                             <th>Price</th>
@@ -76,12 +75,12 @@
                                 <td>
                                     {{ ($services->currentPage() - 1) * $services->perPage() + $loop->iteration }}
                                 </td>
-
+                                {{--
                                 <td>
                                     <span class="badge bg-primary">
                                         {{ $service->category->category_name ?? 'No Category' }}
                                     </span>
-                                </td>
+                                </td> --}}
 
                                 <td class="fw-semibold">
                                     {{ $service->service_name }}
@@ -158,7 +157,8 @@
                         {{-- SERVICE NAME --}}
                         <div class="mb-3">
                             <label>Service Name</label>
-                            <input type="text" name="service_name" placeholder="Enter service name" class="form-control" required>
+                            <input type="text" name="service_name" placeholder="Enter service name" class="form-control"
+                                required>
                         </div>
 
                         {{-- DESCRIPTION --}}
@@ -173,7 +173,7 @@
                             <input type="number" name="price" placeholder="Enter price" class="form-control" required>
                         </div>
 
-                        {{-- CATEGORY (EXISTING + NEW) --}}
+                        {{-- CATEGORY (EXISTING + NEW)
                         <div class="mb-3">
                             <label>Category</label>
 
@@ -190,12 +190,13 @@
                                 <option value="new">+ Create New Category</option>
 
                             </select>
-                        </div>
+                        </div> --}}
 
                         {{-- NEW CATEGORY INPUT --}}
                         <div class="mb-3 d-none" id="newCategoryDiv">
                             <label>New Category Name</label>
-                            <input type="text" name="new_category" placeholder="Enter new category name" class="form-control">
+                            <input type="text" name="new_category" placeholder="Enter new category name"
+                                class="form-control">
                         </div>
 
                         {{-- STATUS --}}
@@ -281,16 +282,16 @@
             $('#searchInput').on('keyup', filterTable);
             $('#statusFilter').on('change', filterTable);
 
-            // TOGGLE NEW CATEGORY INPUT
-            $('#category_id').on('change', function() {
+            // // TOGGLE NEW CATEGORY INPUT
+            // $('#category_id').on('change', function() {
 
-                if ($(this).val() === 'new') {
-                    $('#newCategoryDiv').removeClass('d-none');
-                } else {
-                    $('#newCategoryDiv').addClass('d-none');
-                }
+            //     if ($(this).val() === 'new') {
+            //         $('#newCategoryDiv').removeClass('d-none');
+            //     } else {
+            //         $('#newCategoryDiv').addClass('d-none');
+            //     }
 
-            });
+            // });
 
             $(document).on('click', '.toggle-status-btn', function() {
 

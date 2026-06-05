@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\MedicalRecords;
 use App\Models\Pets;
 use App\Models\Services;
 use App\Models\User;
@@ -42,5 +43,10 @@ class Appointments extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function medicalRecords()
+    {
+        return $this->hasOne(MedicalRecords::class);
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Appointments;
-use App\Models\Categories;
 use Illuminate\Database\Eloquent\Model;
 
 class Services extends Model
@@ -15,14 +14,9 @@ class Services extends Model
         'service_description',
         'price',
         'invoice_item_id',
-        'category_id',
         'status',
     ];
 
-    public function category()
-    {
-        return $this->belongsTo(Categories::class,'category_id');
-    }
 
     public function appointments()
     {

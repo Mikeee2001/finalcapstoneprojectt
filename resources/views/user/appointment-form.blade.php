@@ -46,9 +46,9 @@
                                             <option value="{{ $pet->id }}"
                                                 {{ old('pet_id') == $pet->id ? 'selected' : '' }}>
                                                 {{ $pet->pet_name }}
-                                                @if ($pet->breed)
+                                                {{-- @if ($pet->breed)
                                                     - {{ $pet->breed->breed_name }}
-                                                @endif
+                                                @endif --}}
                                             </option>
                                         @endforeach
 

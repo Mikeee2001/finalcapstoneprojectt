@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Mail\VetAccountMail;
 use App\Models\Appointments;
-use App\Models\Categories;
 use App\Models\Services;
 use App\Models\Specialization;
 use App\Models\User;
 use App\Models\Vet;
+use App\Notifications\AssignedVetNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -38,13 +38,14 @@ class AdminController extends Controller
 
     public function services()
     {
-        return view('admin.service');
-    }
+        $services = Services::latest()->paginate(10);
 
+        return view('admin.service', compact('services'));
+    }
 
     public function userList()
     {
-        $users = User::whereIn('role', ['admin', 'user', 'staff'])->orderBy('created_at', 'desc')
+        $users = User::whereIn('role', ['admin', 'user'])->orderBy('created_at', 'desc')
             ->simplePaginate(10);
         $specializations = Specialization::all();
         return view('admin.users', compact('users', 'specializations'));
@@ -383,16 +384,16 @@ class AdminController extends Controller
         ]);
     }
 
-    public function categories()
-    {
-        $services = Services::with('category')
-            ->latest()
-            ->paginate(10);
+    // public function services()
+    // {
+    //     $services = Services::with('category')
+    //         ->latest()
+    //         ->paginate(10);
 
-        $categories = Categories::all();
+    //     $categories = Categories::all();
 
-        return view('admin.service', compact('services', 'categories'));
-    }
+    //     return view('admin.service', compact('services'));
+    // }
 
 
     public function addService(Request $request)
@@ -402,43 +403,10 @@ class AdminController extends Controller
             'service_description' => 'nullable|string',
             'price' => 'required|numeric',
 
-            'category_id' => 'required',
-
-            'new_category' => 'nullable|string|max:255',
-
-            'status' => 'required|in:active,nactive',
+            'status' => 'required|in:active,inactive',
         ]);
 
-        // =========================
-        // CREATE OR GET CATEGORY
-        // =========================
-        if ($request->category_id === 'new') {
 
-            $newName = trim($request->new_category);
-
-            if (!$newName) {
-                return response()->json([
-                    'status' => 0,
-                    'message' => 'New category name is required.'
-                ], 422);
-            }
-
-            // CHECK FOR DUPLICATE (case-insensitive)
-            $category = Categories::whereRaw('LOWER(category_name) = ?', [strtolower($newName)])
-                ->first();
-
-            // IF EXISTS → reuse it
-            if (!$category) {
-                $category = Categories::create([
-                    'category_name' => $newName
-                ]);
-            }
-
-            $category_id = $category->id;
-
-        } else {
-            $category_id = $request->category_id;
-        }
         // =========================
         // CREATE SERVICE
         // =========================
@@ -446,7 +414,6 @@ class AdminController extends Controller
             'service_name' => $request->service_name,
             'service_description' => $request->service_description,
             'price' => $request->price,
-            'category_id' => $category_id,
             'status' => $request->status,
         ]);
 
@@ -470,47 +437,73 @@ class AdminController extends Controller
         ]);
     }
 
-    public function fetchAppointmentsAll()
+    public function fetchAppointmentsAll(Request $request)
     {
-        $appointments = Appointments::with([
-            'pets.user',
-            'vets',
-            'service',
-        ])->latest()->paginate(5);
+        $query = Appointments::with(['pets.user', 'service', 'vets.user']);
 
-        $calendarAppointments = Appointments::with([
-            'pets.user',
-            'vets',
-            'service',
-        ])->get();
+        // STATUS FILTER
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
 
-        // Dashboard Counts
+        // SEARCH FILTER
+        if ($request->search) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('pets', function ($p) use ($search) {
+                    $p->where('pet_name', 'like', "%$search%");
+                })
+                    ->orWhereHas('service', function ($s) use ($search) {
+                        $s->where('service_name', 'like', "%$search%");
+                    })
+                    ->orWhereHas('pets.user', function ($u) use ($search) {
+                        $u->where('fullname', 'like', "%$search%");
+                    });
+            });
+        }
+
+
+        // 4. Paginated result (ONLY ONCE)
+        $appointments = $query->latest()->paginate(10);
+
+        // 5. Calendar version (optional - keep unfiltered OR reuse filtered if needed)
+        $calendarAppointments = Appointments::with(['pets.user', 'vets', 'service'])->get();
+
+        // 6. Counts (you can also make these dynamic later if needed)
+        $totalCount = Appointments::count();
         $pendingCount = Appointments::where('status', 'pending')->count();
         $approvedCount = Appointments::where('status', 'approved')->count();
         $completedCount = Appointments::where('status', 'completed')->count();
         $cancelledCount = Appointments::where('status', 'cancelled')->count();
 
+        // 7. Vets
+        $vets = Vet::with('user')->where('status', 'available')->get();
+
         $statusColors = [
             'pending' => '#ffc107',
-            'approved' => '#198754',
-            'completed' => '#0d6efd',
+            'approved' => '#0d6efd',
+            'completed' => '#198754',
             'cancelled' => '#dc3545',
-            'rescheduled' => '#0dcaf0',
+            'rescheduled' => '#6c757d',
         ];
 
-        $vets = Vet::with('user')
-            ->where('status', 'available')
-            ->get();
+        $appointments->getCollection()->transform(function ($appointment) use ($statusColors) {
+            $appointment->status_color =
+                $statusColors[$appointment->status] ?? '#6c757d';
+
+            return $appointment;
+        });
 
         return view('admin.appointments', compact(
             'appointments',
             'calendarAppointments',
             'vets',
-            'statusColors',
             'pendingCount',
             'approvedCount',
             'completedCount',
-            'cancelledCount'
+            'cancelledCount',
+            'totalCount'
         ));
     }
 
@@ -547,7 +540,9 @@ class AdminController extends Controller
 
                 'extendedProps' => [
                     'owner' => $appointment->pets->user->fullname ?? 'No Owner',
-                    'vet' => $appointment->vets->fullname ?? 'Unassigned',
+                    'vet' => $appointment->vets && $appointment->vets->user
+                        ? $appointment->vets->user->fullname
+                        : 'No assigned vet',
                     'status' => $appointment->status,
                 ]
             ];
@@ -570,9 +565,34 @@ class AdminController extends Controller
         $appointment->vet_id = $request->vet_id;
         $appointment->save();
 
+        $vet = Vet::with('user')->findOrFail($request->vet_id);
+
+        $vet->user->notify(
+            new AssignedVetNotification([
+                'user' => auth()->user()->fullname,
+                'action' => 'Appointment Assigned',
+                'message' => 'A new appointment has been assigned to you.',
+                'appointment' => $appointment,
+                'vet' => $vet,
+            ])
+        );
+
         return response()->json([
             'success' => true,
             'message' => 'Veterinarian assigned successfully.'
+        ]);
+    }
+
+    public function latestCheck()
+    {
+        $latest = Appointments::latest()->first();
+
+        $lastSeen = session('last_appointment_id');
+
+        session(['last_appointment_id' => $latest->id ?? null]);
+
+        return response()->json([
+            'hasNew' => $lastSeen !== $latest->id
         ]);
     }
 

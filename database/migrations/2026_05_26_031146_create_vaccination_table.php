@@ -14,7 +14,9 @@ return new class extends Migration {
             $table->id();
             $table->dateTime('date_given');
             $table->text('notes')->nullable();
+            $table->dateTime('next_due_date');
             $table->timestamps();
+
 
             $table->unsignedBigInteger('records_id');
             $table->unsignedBigInteger('medicine_id');

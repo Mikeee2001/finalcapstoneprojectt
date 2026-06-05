@@ -121,7 +121,10 @@
     </div>
 
     <!-- VETS TABLE -->
-    <div class="card border-0 shadow-lg rounded-4 mt-4">
+    <div class="container-fluid mt-4">
+
+        <!-- CARD -->
+        <div class="card border-0 shadow-lg rounded-4">
 
         <!-- HEADER -->
         <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
@@ -176,6 +179,7 @@
             </div>
 
         </div>
+    </div>
 
     </div>
 
@@ -185,7 +189,7 @@
             <div class="modal-content border-0 shadow rounded-3">
 
                 <!-- HEADER -->
-                <div class="modal-header bg-success text-white py-2">
+                <div class="modal-header bg-primary text-white py-2">
                     <h5 class="modal-title fw-semibold fs-6">
                         <i class="fa-solid fa-user-doctor fa-sm me-1"></i>
                         Create Veterinarian

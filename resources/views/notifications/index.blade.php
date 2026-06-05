@@ -40,13 +40,13 @@
                             </div>
 
                             <div class="notification-message text-muted mt-1">
-
                                 <strong>
-                                    {{ $notification->data['user'] ?? auth()->user()->fullname }}
+                                    {{ $notification->data['user'] ?? 'System' }}
                                 </strong>
 
-                                {{ $notification->data['message'] ?? 'No message available.' }}
-
+                                <span>
+                                    {{ $notification->data['message'] ?? 'No message available.' }}
+                                </span>
                             </div>
 
                         </div>

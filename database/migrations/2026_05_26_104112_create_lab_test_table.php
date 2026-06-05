@@ -19,11 +19,8 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->unsignedBigInteger('records_id');
-            $table->unsignedBigInteger('serviced_id');
-
 
             $table->foreign('records_id')->references('id')->on('medical_records')->onDelete('cascade');
-                $table->foreign('serviced_id')->references('id')->on('services')->onDelete('cascade');
         });
     }
 

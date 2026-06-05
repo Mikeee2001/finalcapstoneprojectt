@@ -69,6 +69,40 @@
             position: absolute;
             z-index: 1055;
         }
+
+        .stat-col {
+            flex: 0 0 20%;
+            max-width: 20%;
+        }
+
+        @media (max-width: 768px) {
+            .stats-wrapper {
+                flex-wrap: wrap;
+            }
+
+            .stats-wrapper .stat-card {
+                flex: 1 1 45%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-wrapper .stat-card {
+                flex: 1 1 100%;
+            }
+        }
+
+        .stats-wrapper {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+        }
+
+        .stats-wrapper .stat-card {
+            flex: 1;
+            /* equal width */
+            min-width: 0;
+        }
     </style>
     <div class="container-fluid appointment-container py-4">
 
@@ -83,316 +117,338 @@
         <!-- ================= TABLE VIEW  ================= -->
 
         <!-- TOP STATS -->
-        <div class="row g-3 mb-4">
+        <div id="tableView">
+            <div class="stats-wrapper">
 
-            <div class="col-md-3">
                 <div class="stat-card stat-blue">
                     <i class="fa-solid fa-calendar-check"></i>
-                    <h3>{{ $appointments->total() }}</h3>
-                    <span>Total Appointments</span>
+                    <h3>{{ $totalCount }}</h3>
+                    <span>Total</span>
                 </div>
-            </div>
 
-            <div class="col-md-3">
                 <div class="stat-card stat-yellow">
                     <i class="fa-solid fa-clock"></i>
                     <h3>{{ $pendingCount }}</h3>
                     <span>Pending</span>
                 </div>
-            </div>
 
-            <div class="col-md-3">
                 <div class="stat-card stat-green">
+                    <i class="fa-solid fa-xmark"></i>
+                    <h3>{{ $cancelledCount }}</h3>
+                    <span>Cancelled</span>
+                </div>
+
+                <div class="stat-card stat-blue">
                     <i class="fa-solid fa-circle-check"></i>
                     <h3>{{ $approvedCount }}</h3>
                     <span>Approved</span>
                 </div>
-            </div>
 
-            <div class="col-md-3">
                 <div class="stat-card stat-teal">
                     <i class="fa-solid fa-stethoscope"></i>
                     <h3>{{ $completedCount }}</h3>
                     <span>Completed</span>
                 </div>
             </div>
-
         </div>
 
         <!-- SEARCH + FILTER -->
-        <div class="row mb-4">
+        <form method="GET" action="{{ url('/admin/appointments') }}">
+            <div class="row mb-4 mt-3">
 
-            <div class="col-md-8">
-                <input type="text" class="form-control search-box" placeholder="Search pet, owner, service...">
+                <div class="col-md-8">
+                    <input type="text" id="searchInput" name="search" value="{{ request('search') }}"
+                        class="form-control search-box" placeholder="Search pet, owner, service...">
+                </div>
+
+                <div class="col-md-3">
+                    <select name="status" class="form-select" id="statusFilter">
+                        <option value="">All Status</option>
+
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
+                            Pending
+                        </option>
+
+                        <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>
+                            Approved
+                        </option>
+
+                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>
+                            Completed
+                        </option>
+
+                        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>
+                            Cancelled
+                        </option>
+
+                        <option value="rescheduled" {{ request('status') == 'rescheduled' ? 'selected' : '' }}>
+                            Rescheduled
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fa-solid fa-search"></i>
+                    </button>
+                </div>
+
             </div>
-
-            <div class="col-md-4">
-                <select class="form-select">
-                    <option>All Status</option>
-                    <option>Pending</option>
-                    <option>Approved</option>
-                    <option>Completed</option>
-                    <option>Cancelled</option>
-                </select>
-            </div>
-
-        </div>
+        </form>
 
         <!-- TABLE CARD -->
         <div class="card shadow-sm border-0 rounded-4">
 
             <div class="card-header bg-white border-0 py-3">
-
                 <h5 class="mb-0">
                     <i class="fa-solid fa-calendar-check text-primary"></i>
                     Appointment Management
                 </h5>
-
             </div>
 
             <div class="table-responsive">
 
-                <table class="table align-middle mb-0">
+                <div id="appointmentsTableContainer">
 
+                    <table class="table align-middle mb-0">
 
-                    <thead>
-                        <tr>
-                            <th>Pet</th>
-                            <th>Service</th>
-                            <th>Date & Time</th>
-                            <th>Veterinarian</th>
-                            <th>Status</th>
-                            <th width="180">Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        @foreach ($appointments as $appointment)
+                        <thead>
                             <tr>
-
-                                <td>
-                                    <div class="d-flex align-items-center">
-
-                                        <div class="pet-avatar me-3">
-                                            <i class="fa-solid fa-paw"></i>
-                                        </div>
-
-                                        <div>
-                                            <div class="fw-bold">
-                                                {{ $appointment->pets->pet_name }}
-                                            </div>
-
-                                            <small class="text-muted">
-                                                {{ $appointment->pets->user->fullname }}
-                                            </small>
-                                        </div>
-
-                                    </div>
-                                </td>
-
-                                <td>
-                                    {{ $appointment->service->service_name }}
-                                </td>
-
-                                <td>
-                                    <div>
-                                        {{ Carbon\Carbon::parse($appointment->appointment_date ?? $appointment->requested_date)->format('M d, Y') }}
-                                    </div>
-
-                                    <small class="text-muted">
-                                        {{ Carbon\Carbon::parse($appointment->appointment_time ?? $appointment->requested_time)->format('h:i A') }}
-                                    </small>
-                                </td>
-
-                                <td>
-
-                                    @if ($appointment->vets)
-                                        <span class="vet-badge">
-
-                                            <i class="fa-solid fa-user-doctor me-1"></i>
-
-                                            {{ $appointment->vets->user->fullname }}
-
-                                        </span>
-                                    @else
-                                        <span class="badge bg-secondary">
-                                            Not Assigned
-                                        </span>
-                                    @endif
-
-                                </td>
-
-                                <td class="status-cell">
-                                    @if ($appointment->status == 'pending')
-                                        <span class="badge bg-warning text-dark">Pending</span>
-                                    @elseif($appointment->status == 'approved')
-                                        <span class="badge bg-success">Approved</span>
-                                    @elseif($appointment->status == 'completed')
-                                        <span class="badge bg-primary">Completed</span>
-                                    @elseif($appointment->status == 'cancelled')
-                                        <span class="badge bg-danger">Cancelled</span>
-                                    @elseif($appointment->status == 'rescheduled')
-                                        <span class="badge bg-secondary">Rescheduled</span>
-                                    @endif
-                                </td>
-
-                                <td class="action-cell">
-
-                                    <div class="dropdown">
-
-                                        <button class="btn btn-light border" data-bs-toggle="dropdown">
-                                            <i class="fa-solid fa-ellipsis"></i>
-                                        </button>
-
-                                        <ul class="dropdown-menu dropdown-menu-end">
-
-                                            {{-- PENDING --}}
-                                            @if ($appointment->status == 'pending')
-                                                <li>
-                                                    <a class="dropdown-item update-status" data-id="{{ $appointment->id }}"
-                                                        data-status="approved">
-                                                        <i class="fa-solid fa-check me-2"></i>
-                                                        Approve
-                                                    </a>
-                                                </li>
-
-                                                <li>
-                                                    <a class="dropdown-item update-status" data-id="{{ $appointment->id }}"
-                                                        data-status="cancelled">
-                                                        <i class="fa-solid fa-xmark me-2"></i>
-                                                        Cancel
-                                                    </a>
-                                                </li>
-
-                                                {{-- APPROVED --}}
-                                            @elseif($appointment->status == 'approved')
-                                                <li>
-                                                    <a class="dropdown-item update-status" data-id="{{ $appointment->id }}"
-                                                        data-status="completed">
-                                                        <i class="fa-solid fa-circle-check me-2"></i>
-                                                        Complete
-                                                    </a>
-                                                </li>
-
-                                                <li>
-                                                    <a class="dropdown-item reschedule-btn"
-                                                        data-id="{{ $appointment->id }}">
-                                                        <i class="fa-solid fa-calendar-days me-2"></i>
-                                                        Reschedule
-                                                    </a>
-                                                </li>
-
-                                                <li>
-                                                    <a class="dropdown-item assign-vet-btn"
-                                                        data-id="{{ $appointment->id }}">
-                                                        <i class="fa-solid fa-user-doctor me-2"></i>
-                                                        Assign Vet
-                                                    </a>
-                                                </li>
-
-                                                {{-- RESCHEDULED --}}
-                                            @elseif($appointment->status == 'rescheduled')
-                                                <li>
-                                                    <a class="dropdown-item update-status" data-id="{{ $appointment->id }}"
-                                                        data-status="completed">
-                                                        <i class="fa-solid fa-circle-check me-2"></i>
-                                                        Complete
-                                                    </a>
-                                                </li>
-
-                                                <li>
-                                                    <a class="dropdown-item assign-vet-btn"
-                                                        data-id="{{ $appointment->id }}">
-                                                        <i class="fa-solid fa-user-doctor me-2"></i>
-                                                        Assign Vet
-                                                    </a>
-                                                </li>
-                                            @endif
-
-                                        </ul>
-
-                                    </div>
-
-                                </td>
-
+                                <th>Pet</th>
+                                <th>Service</th>
+                                <th>Date & Time</th>
+                                <th>Veterinarian</th>
+                                <th>Status</th>
+                                <th width="180">Actions</th>
                             </tr>
-                        @endforeach
+                        </thead>
 
-                    </tbody>
+                        <tbody class="appointmentsTbody">
+
+                            @forelse ($appointments as $appointment)
+                                @php
+                                    $pet = $appointment->pets;
+
+                                    $petImage =
+                                        $pet && $pet->pet_image
+                                            ? asset('pet_images/' . $pet->pet_image)
+                                            : asset('images/default-pet.png');
+
+                                    $vet = $appointment->vets;
+
+                                    $vetImage =
+                                        $vet && $vet->image
+                                            ? asset('storage/' . $vet->image)
+                                            : asset('images/default-vet.png');
+                                @endphp
+
+                                <tr>
+
+                                    {{-- PET --}}
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <img src="{{ $petImage }}" class="rounded-circle border" width="45"
+                                                height="45" style="object-fit: cover;">
+
+                                            <div>
+                                                <div class="fw-bold">
+                                                    {{ $pet->pet_name ?? 'No Pet' }}
+                                                </div>
+                                                <small class="text-muted">
+                                                    {{ $pet->user->fullname ?? 'No Owner' }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    {{-- SERVICE --}}
+                                    <td>
+                                        {{ $appointment->service->service_name ?? 'No Service' }}
+                                    </td>
+
+                                    {{-- DATE --}}
+                                    <td>
+                                        <div>
+                                            {{ Carbon\Carbon::parse($appointment->appointment_date ?? $appointment->requested_date)->format('M d, Y') }}
+                                        </div>
+
+                                        <small class="text-muted">
+                                            {{ Carbon\Carbon::parse($appointment->appointment_time ?? $appointment->requested_time)->format('h:i A') }}
+                                        </small>
+                                    </td>
+
+                                    {{-- VET --}}
+                                    <td>
+                                        @if ($vet)
+                                            <div class="d-flex align-items-center gap-2">
+                                                <img src="{{ $vetImage }}" class="rounded-circle border" width="40"
+                                                    height="40" style="object-fit: cover;">
+
+                                                <div>
+                                                    <div class="fw-semibold">
+                                                        Dr. {{ $vet->user->fullname ?? 'N/A' }}
+                                                    </div>
+                                                    <small class="text-muted">Veterinarian</small>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <span class="badge bg-secondary">Not Assigned</span>
+                                        @endif
+                                    </td>
+
+                                    <td class="status-cell">
+                                        <span class="badge"
+                                            style="
+                                                    background-color: {{ $appointment->status_color }};
+                                                    color:white;
+                                                    padding:8px 12px;
+                                                    border-radius:20px;
+                                                ">
+                                            {{ ucfirst($appointment->status) }}
+                                        </span>
+                                    </td>
+
+                                    {{-- ACTIONS --}}
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-light border" data-bs-toggle="dropdown">
+                                                <i class="fa-solid fa-ellipsis"></i>
+                                            </button>
+
+                                            <ul class="dropdown-menu dropdown-menu-end">
+
+                                                @if ($appointment->status == 'pending')
+                                                    <li>
+                                                        <a class="dropdown-item update-status"
+                                                            data-id="{{ $appointment->id }}"
+                                                            data-status="approved">Approve</a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a class="dropdown-item update-status"
+                                                            data-id="{{ $appointment->id }}"
+                                                            data-status="cancelled">Cancel</a>
+                                                    </li>
+                                                @elseif($appointment->status == 'approved')
+                                                    <li>
+                                                        <a class="dropdown-item update-status"
+                                                            data-id="{{ $appointment->id }}"
+                                                            data-status="completed">Complete</a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a class="dropdown-item reschedule-btn"
+                                                            data-id="{{ $appointment->id }}">Reschedule</a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a class="dropdown-item assign-vet-btn"
+                                                            data-id="{{ $appointment->id }}">Assign Vet</a>
+                                                    </li>
+                                                @endif
+
+                                            </ul>
+                                        </div>
+                                    </td>
+
+                                </tr>
+
+                            @empty
+
+                                <tr id="serverEmptyRow">
+                                    <td colspan="6" class="text-center py-5">
+                                        <i class="fa-solid fa-calendar-xmark fa-3x text-muted mb-3"></i>
+                                        <h6 class="text-muted">No appointments found</h6>
+                                    </td>
+                                </tr>
+                            @endforelse
+
+                            {{-- JS EMPTY ROW --}}
+                            <tr id="noResultsRow" style="display:none;">
+                                <td colspan="6" class="text-center py-5">
+                                    <i class="fa-solid fa-search fa-3x text-muted mb-3"></i>
+                                    <h6 class="text-muted">No matching results</h6>
+                                </td>
+                            </tr>
+
+                        </tbody>
 
 
-                </table>
+                    </table>
 
-                <div class="card-footer bg-white border-0 d-flex justify-content-end">
-                    {{ $appointments->links() }}
+                </div>
+
+                <div id="paginationLinks" class="mt-3">
+                    {{ $appointments->appends(request()->query())->links() }}
                 </div>
 
             </div>
 
         </div>
-
-        {{-- RESCHEDULE MODAL (ADDED ONLY - NO DELETION) --}}
-        <div class="modal fade" id="rescheduleModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-
-                    <div class="modal-header bg-warning">
-                        <h5 class="modal-title">
-                            Reschedule Appointment
-                        </h5>
-
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-
-                        <input type="hidden" id="reschedule_id">
-
-                        <div class="mb-3">
-                            <label class="form-label">
-                                New Date
-                            </label>
-
-                            <input type="date" id="appointment_date" class="form-control" min="{{ date('Y-m-d') }}">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">
-                                New Time
-                            </label>
-
-                            <input type="time" id="appointment_time" class="form-control">
-                        </div>
-
-                    </div>
-
-                    <div class="modal-footer">
-
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Close
-                        </button>
-
-                        <button type="button" class="btn btn-warning" id="saveReschedule">
-                            Save Changes
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= CALENDAR VIEW ================= -->
-        <div id="calendarView" style="display:none;">
-            <div class="card mt-3 shadow-sm">
-                <div class="card-body">
-                    <div id="calendar"></div>
-                </div>
-            </div>
-        </div>
-
     </div>
+
+    {{-- RESCHEDULE MODAL (ADDED ONLY - NO DELETION) --}}
+    <div class="modal fade" id="rescheduleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">
+                        Reschedule Appointment
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" id="reschedule_id">
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            New Date
+                        </label>
+
+                        <input type="date" id="appointment_date" class="form-control" min="{{ date('Y-m-d') }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            New Time
+                        </label>
+
+                        <input type="time" id="appointment_time" class="form-control">
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+
+                    <button type="button" class="btn btn-warning" id="saveReschedule">
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= CALENDAR VIEW ================= -->
+    <div id="calendarView" style="display:none;">
+        <div class="card mt-3 shadow-sm">
+            <div class="card-body">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+
+
 
     <!-- ================= YOUR EXISTING MODALS ================= -->
     <div class="modal fade" id="assignVetModal">
@@ -433,8 +489,103 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- YOUR STATUS + RESCHEDULE SCRIPTS ARE STILL HERE -->
+
+
     <script>
+        // PAGINATION SCRIPT
+        $(document).on('click', '#paginationLinks a', function(e) {
+
+            e.preventDefault();
+
+            $.get($(this).attr('href'), function(data) {
+
+                $('#appointmentsTableContainer').html(
+                    $(data).find('#appointmentsTableContainer').html()
+                );
+
+                $('#paginationLinks').html(
+                    $(data).find('#paginationLinks').html()
+                );
+
+                filterTable(); // IMPORTANT
+            });
+        });
+
+        // SEARCH AND FILTER FUNCTIONALITY
+        $(document).ready(function() {
+            function filterTable() {
+
+                let search = $('#searchInput').val()?.toLowerCase().trim() || '';
+                let status = $('#statusFilter').val()?.toLowerCase().trim() || '';
+
+                let visibleRows = 0;
+
+                const rows = $('#appointmentsTableContainer tbody tr');
+
+                if (search === "" && status === "") {
+
+                    rows.each(function() {
+
+                        let row = $(this);
+
+                        if (row.is('#serverEmptyRow') || row.is('#noResultsRow')) {
+                            return;
+                        }
+
+                        row.show();
+                    });
+
+                    $('#noResultsRow').hide();
+                    return;
+                }
+
+                rows.each(function() {
+
+                    let row = $(this);
+
+                    if (row.is('#serverEmptyRow') || row.is('#noResultsRow')) {
+                        return;
+                    }
+
+                    let pet = row.find('td:nth-child(1)').text().toLowerCase();
+                    let service = row.find('td:nth-child(2)').text().toLowerCase();
+                    let rowStatus = row.find('.status-cell').text().toLowerCase().trim();
+
+                    let matchSearch = pet.includes(search) || service.includes(search);
+                    let matchStatus = status === "" || rowStatus.includes(status);
+
+                    if (matchSearch && matchStatus) {
+                        row.show();
+                        visibleRows++;
+                    } else {
+                        row.hide();
+                    }
+                });
+
+                $('#noResultsRow').toggle(visibleRows === 0);
+            }
+        });
+
+
+        // RELOAD THE TABLES AUTOMATICALLY EVERY 5 SECONDS (SAFE VERSION)
+        setInterval(function() {
+
+            $.ajax({
+                url: '/admin/appointments/latest-check',
+                type: 'GET',
+                success: function(res) {
+
+                    if (res.hasNew) {
+
+                        $('#appointmentsTableContainer').load(location.href +
+                            " #appointmentsTableContainer > *");
+                    }
+                }
+            });
+
+        }, 5000);
+
+        //  <!-- YOUR STATUS + RESCHEDULE SCRIPTS ARE STILL HERE -->
         $(document).ready(function() {
 
             let calendarEl = document.getElementById('calendar');
